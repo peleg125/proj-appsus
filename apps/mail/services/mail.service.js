@@ -51,6 +51,16 @@ const demoMails = [
     from: 'billing@appsus.com',
     to: 'user@appsus.com',
   },
+  {
+    id: 'e105',
+    subject: 'למה אתה בודק מיילים בשעות האלה',
+    body: 'ממש חייב להפסיק לענות, זה נוראי',
+    isRead: true,
+    sentAt: 1551231930596,
+    removedAt: null,
+    from: 'user@appsus.com',
+    to: 'mom@gmail.com',
+  },
 ]
 
 _createMails()

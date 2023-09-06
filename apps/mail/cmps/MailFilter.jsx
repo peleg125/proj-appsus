@@ -1,6 +1,5 @@
-export function MailFilter({ onSetFilterBy }) {
+export function MailFilter({ onFilterChange }) {
   const { useState } = React
-  const { useNavigate } = ReactRouterDOM
   const [filterByToEdit, setFilterByToEdit] = useState({
     status: 'inbox',
     txt: '',
@@ -8,8 +7,6 @@ export function MailFilter({ onSetFilterBy }) {
     isStared: null,
     labels: [],
   })
-
-  const navigate = useNavigate()
 
   function handleChange({ target }) {
     const field = target.name
@@ -34,8 +31,7 @@ export function MailFilter({ onSetFilterBy }) {
 
   function onSubmitFilter(ev) {
     ev.preventDefault()
-    setFilterByToEdit(filterByToEdit)
-    console.log('event from onsubmit', ev)
+    onFilterChange(filterByToEdit)
   }
 
   const { status, txt, isRead, isStared } = filterByToEdit

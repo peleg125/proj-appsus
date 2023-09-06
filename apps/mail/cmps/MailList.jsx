@@ -1,5 +1,3 @@
-import { LongTxt } from './LongTxt.jsx'
-
 const { Link } = ReactRouterDOM
 
 export function MailList({ mails }) {
@@ -10,7 +8,7 @@ export function MailList({ mails }) {
           <th>Select</th>
           <th>Star</th>
           <th>Sender</th>
-          <th>Subject & Snippet</th>
+          <th>Subject & description</th>
           {/* <th>Labels</th> */}
           <th>Date</th>
         </tr>
@@ -25,10 +23,11 @@ export function MailList({ mails }) {
             <td>{mail.from}</td>
             <td>
               <Link to={`/mail/${mail.id}`}>
-                {mail.subject} - <LongTxt txt={mail.body} />
+                <span className='truncate'>
+                  {mail.subject} - {mail.body}
+                </span>
               </Link>
             </td>
-            {/* <td>{mail.labels.join(', ')}</td> */}
             <td>{new Date(mail.sentAt).toLocaleString()}</td>
           </tr>
         ))}
