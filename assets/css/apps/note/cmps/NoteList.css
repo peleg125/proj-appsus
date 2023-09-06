@@ -1,1 +1,20 @@
  /* note list */
+ .note-container {
+    background-color: green;
+    border: 1px solid black;
+    width: 238px;
+    border-radius: 1em;
+    height: 100px
+ }
+
+ .note-txt {
+    display: inline-block;
+    font-size: .875rem;
+ }
+
+ .note-title {
+    font-size: 1rem;
+    margin-bottom: 0;
+
+ }
+
