@@ -1,15 +1,15 @@
 import { NotePreview } from "./NotePreview.jsx"
 
-export function NoteList({ notes }) {
-  console.log(notes)
+export function NoteList({ notes, onRemoveNote, onEditNote }) {
   return (
     <ul>
       {notes &&
         notes.map((note) => (
-          <li key={note.id}>
-            <div className='note-container'>
-              <NotePreview note={note} />
-            </div>
+          <li onClick={() => onEditNote(note)} className='note-container' key={note.id}>
+            <NotePreview note={note} />
+            <button className='btn-remove' onClick={() => onRemoveNote(note.id)}>
+              Remove
+            </button>
           </li>
         ))}
     </ul>

@@ -1,28 +1,47 @@
-import { storageService } from "../../../services/storage.service.js"
 import { utilService } from "../../../services/util.service.js"
+import { storageService } from "../../../services/async-storage.service.js"
 
 const NOTE_KEY = "noteDB"
 _createNotes()
 
 export const noteService = {
   getEmptyNote,
-  getNotes,
   createNote,
+  save,
+  remove,
+  get,
+  getNotes,
 }
 
 function getNotes() {
-  const notes = storageService.loadFromStorage(NOTE_KEY)
+  const notes = utilService.loadFromStorage(NOTE_KEY) || []
   return notes
 }
 
+function get(noteId) {
+  return storageService.get(NOTE_KEY, noteId)
+}
+
+function remove(noteId) {
+  return storageService.remove(NOTE_KEY, noteId)
+}
+
+function save(note) {
+  if (note.id) {
+    return storageService.put(NOTE_KEY, note)
+  } else {
+    return storageService.post(NOTE_KEY, note)
+  }
+}
+
 function getEmptyNote(txt = "", title = "") {
-  return { info: { txt }, title }
+  return { info: { txt, title } }
 }
 
 function _createNotes() {
-  let notes = storageService.loadFromStorage(NOTE_KEY)
+  let notes = utilService.loadFromStorage(NOTE_KEY)
   if (!notes || !notes.length) {
-    const notes = [
+    notes = [
       {
         id: "n101",
         createdAt: 1112222,
@@ -73,17 +92,33 @@ function _createNotes() {
       //   },
       // },
     ]
-    storageService.saveToStorage(NOTE_KEY, notes)
+    utilService.saveToStorage(NOTE_KEY, notes)
   }
 }
 
 function createNote(title, txt) {
-  const note = {
+  const newNote = {
     id: utilService.makeId(),
+    type: "NoteTxt",
+    isPinned: false,
+    style: {
+      backgroundColor: "#00d",
+    },
     info: {
       title: title || "",
       txt: txt || "",
     },
   }
-  return note
+  let notes = utilService.loadFromStorage(NOTE_KEY)
+  notes.push(newNote)
+  utilService.saveToStorage(NOTE_KEY, notes)
+  return newNote
 }
+// storageService
+//   .post(NOTE_KEY, newNote)
+//   .then((savedNote) => {
+//     console.log("Note saved:", savedNote)
+//   })
+//   .catch((error) => {
+//     console.error("Error saving note:", error)
+//   })
