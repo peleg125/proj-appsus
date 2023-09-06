@@ -22,7 +22,7 @@ export function MailIndex() {
   }
 
   return (
-    <div className='mail-index'>
+    <div className='mail-index grid'>
       <MailFilter onFilterChange={handleFilterChange} />
       <MailFolderList
         onFolderChange={(folder) =>

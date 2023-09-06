@@ -1,3 +1,5 @@
+import { LongTxt } from './LongTxt.jsx'
+
 const { Link } = ReactRouterDOM
 
 export function MailList({ mails }) {
@@ -5,8 +7,11 @@ export function MailList({ mails }) {
     <table>
       <thead>
         <tr>
-          <th>Subject</th>
+          <th>Select</th>
+          <th>Star</th>
           <th>Sender</th>
+          <th>Subject & Snippet</th>
+          {/* <th>Labels</th> */}
           <th>Date</th>
         </tr>
       </thead>
@@ -14,9 +19,16 @@ export function MailList({ mails }) {
         {mails.map((mail) => (
           <tr key={mail.id}>
             <td>
-              <Link to={`/mail/${mail.id}`}>{mail.subject}</Link>
+              <input type='checkbox' />
             </td>
+            <td>★</td>
             <td>{mail.from}</td>
+            <td>
+              <Link to={`/mail/${mail.id}`}>
+                {mail.subject} - <LongTxt txt={mail.body} />
+              </Link>
+            </td>
+            {/* <td>{mail.labels.join(', ')}</td> */}
             <td>{new Date(mail.sentAt).toLocaleString()}</td>
           </tr>
         ))}
