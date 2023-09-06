@@ -1,8 +1,3 @@
-import { MailList } from '../cmps/MailList.jsx'
-import { MailFilter } from '../cmps/MailFilter.jsx'
-import { MailFolderList } from '../cmps/MailFolderList.jsx'
-import { mailService } from '../services/mail.service.js'
-
 export function MailIndex() {
   const { useState, useEffect } = React
   const [mails, setMails] = useState([])

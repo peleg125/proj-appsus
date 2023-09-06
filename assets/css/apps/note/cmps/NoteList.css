@@ -1,1 +1,27 @@
  /* note list */
+ .main-container {
+   background-color: #202124;
+   color: white;
+ }
+ 
+ .note-container {
+    border: 1px solid #5f6368;
+    width: 238px;
+    border-radius: 1em;
+    height: 100px
+ }
+
+ .note-txt {
+    display: inline-block;
+    font-size: .875rem;
+ }
+
+ .note-title {
+    font-size: 1rem;
+    margin-bottom: 0;
+
+ }
+
+.btn-remove {
+   z-index: 10;
+}
