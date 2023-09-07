@@ -1,37 +1,26 @@
 const { Link } = ReactRouterDOM
 
+// TODO: ADD CHECKBOX TO FILTER
 export function MailList({ mails }) {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Select</th>
-          <th>Star</th>
-          <th>Sender</th>
-          <th>Subject & description</th>
-          {/* <th>Labels</th> */}
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div className='mail-list'>
+      <div className='mail-list-body'>
         {mails.map((mail) => (
-          <tr key={mail.id}>
-            <td>
+          <div key={mail.id} className='mail-item mail-grid'>
+            <div>
               <input type='checkbox' />
-            </td>
-            <td>★</td>
-            <td>{mail.from}</td>
-            <td>
+            </div>
+            <div>★</div>
+            <div>{mail.from}</div>
+            <div className='desc-div truncate'>
               <Link to={`/mail/${mail.id}`}>
-                <span className='truncate'>
-                  {mail.subject} - {mail.body}
-                </span>
+                {mail.subject} - {mail.body}
               </Link>
-            </td>
-            <td>{new Date(mail.sentAt).toLocaleString()}</td>
-          </tr>
+            </div>
+            <div>{new Date(mail.sentAt).toLocaleString()}</div>
+          </div>
         ))}
-      </tbody>
-    </table>
+      </div>
+    </div>
   )
 }

@@ -54,7 +54,7 @@ export function MailFilter({ onFilterChange }) {
   const { status, txt, isRead, isStared } = filterByToEdit
 
   return (
-    <form onSubmit={onSubmitFilter}>
+    <form className='filter-from' onSubmit={onSubmitFilter}>
       <label>
         Status:
         <select name='status' value={status || 'inbox'} onChange={handleChange}>
@@ -67,7 +67,13 @@ export function MailFilter({ onFilterChange }) {
 
       <label>
         Search:
-        <input type='text' name='txt' value={txt} onChange={handleChange} />
+        <input
+          className='filter-search'
+          type='text'
+          name='txt'
+          value={txt}
+          onChange={handleChange}
+        />
       </label>
 
       <label>

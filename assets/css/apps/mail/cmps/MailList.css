@@ -1,4 +1,4 @@
-table {
+/* table {
   width: 100%;
   border-collapse: collapse;
 }
@@ -48,4 +48,43 @@ tbody td:nth-child(5) {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+} */
+.mail-list {
+  width: 100%;
+}
+
+.mail-grid {
+  display: grid;
+  grid-template-columns: 50px 50px 1fr 3fr 150px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+.mail-list-body {
+  display: grid;
+  grid-gap: 16px;
+}
+
+.mail-list-header {
+  font-weight: bold;
+}
+
+.mail-item {
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: grid;
+  grid-template-columns: auto auto 200px 1fr auto;
+  align-items: center;
+  grid-gap: 16px;
+}
+
+.mail-item:hover {
+  background: #f2f2f2;
+}
+
+.desc-div.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -65,18 +65,30 @@ export function MailIndex() {
   }
 
   return (
-    <div className='mail-index grid'>
-      <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
-      <MailFolderList onFolderChange={handleFolderChange} />
-      <MailList mails={mails} />
-      <button onClick={() => setComposeOpen(true)}>Compose</button>
+    <div className='mail-index'>
+      <div className='sidebar'>
+        <MailFolderList onFolderChange={handleFolderChange} />
+      </div>
 
-      <MailCompose
-        isOpen={isComposeOpen}
-        onClose={() => setComposeOpen(false)}
-        onSaveDraft={handleDraftSave}
-        onSaveEmail={handleSaveEmail}
-      />
+      <div className='mail-main-content'>
+        <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
+        <MailList mails={mails} />
+      </div>
+
+      <div className='compose-button'>
+        <button onClick={() => setComposeOpen(true)}>Compose</button>
+      </div>
+
+      {isComposeOpen && (
+        <div className='compose-modal'>
+          <MailCompose
+            isOpen={isComposeOpen}
+            onClose={() => setComposeOpen(false)}
+            onSaveDraft={handleDraftSave}
+            onSaveEmail={handleSaveEmail}
+          />
+        </div>
+      )}
     </div>
   )
 }

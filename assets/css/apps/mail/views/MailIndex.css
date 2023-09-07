@@ -1,1 +1,43 @@
- /* mail index  */
+.mail-index {
+  display: grid;
+  grid-template-columns: 2.5em 3fr;
+  grid-template-areas:
+    'sidebar mail-main-content'
+    'compose-button compose-button';
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.mail-main-content {
+  grid-area: mail-main-content;
+}
+
+.compose-button {
+  grid-area: compose-button;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.compose-modal {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 400px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+.folder-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  max-width: min-content;
+}
+.folder-list a {
+  margin-block-start: 10px;
+}
