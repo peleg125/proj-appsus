@@ -1,6 +1,7 @@
 import { MailList } from '../cmps/MailList.jsx'
 import { MailFilter } from '../cmps/MailFilter.jsx'
 import { MailFolderList } from '../cmps/MailFolderList.jsx'
+import { MailCompose } from '../cmps/MailCompose.jsx'
 import { mailService } from '../services/mail.service.js'
 
 export function MailIndex() {
@@ -8,6 +9,7 @@ export function MailIndex() {
   const { useNavigate, useParams, useLocation } = ReactRouterDOM
   const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
   const [mails, setMails] = useState([])
+  const [isComposeOpen, setComposeOpen] = useState(false)
   const { status: statusParam } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
@@ -51,11 +53,30 @@ export function MailIndex() {
     navigate(`/mail/${newFilterBy.status}?txt=${newFilterBy.txt}`)
   }
 
+  function handleDraftSave(draft) {
+    // Save the draft and get its ID
+    // const draftId = // save the draft and get its ID (e.g., from an API)
+    // Update the query parameters to include the draft ID
+    // navigate(`/mail/compose?id=${draftId}`)
+  }
+
+  function handleSaveEmail(mail) {
+    mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
+  }
+
   return (
     <div className='mail-index grid'>
       <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
       <MailFolderList onFolderChange={handleFolderChange} />
       <MailList mails={mails} />
+      <button onClick={() => setComposeOpen(true)}>Compose</button>
+
+      <MailCompose
+        isOpen={isComposeOpen}
+        onClose={() => setComposeOpen(false)}
+        onSaveDraft={handleDraftSave}
+        onSaveEmail={handleSaveEmail}
+      />
     </div>
   )
 }
