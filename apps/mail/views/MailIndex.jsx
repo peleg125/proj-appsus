@@ -85,7 +85,7 @@ export function MailIndex() {
             isOpen={isComposeOpen}
             onClose={() => setComposeOpen(false)}
             onSaveDraft={handleDraftSave}
-            onSaveEmail={handleSaveEmail}
+            onSendEmail={handleSaveEmail}
           />
         </div>
       )}

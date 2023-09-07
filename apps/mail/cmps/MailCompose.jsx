@@ -5,6 +5,7 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
     to: '',
     subject: '',
     body: '',
+    from: 'user@appsus.com',
   })
 
   const draftRef = useRef(draft)
@@ -15,7 +16,6 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // Auto save every 5 seconds
       if (
         draftRef.current.to ||
         draftRef.current.subject ||
@@ -37,15 +37,25 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
   }
   function handleSendClick(ev) {
     ev.preventDefault()
-    console.log('ev from handle send click', ev)
-    // onSendEmail(emailData)
+    const { target } = ev
+    const { to, subject, body } = target
+    const toValue = to.value
+    const subjectValue = subject.value
+    const bodyValue = body.value
+
+    const emailData = {
+      to: toValue,
+      subject: subjectValue,
+      body: bodyValue,
+      from: 'user@appsus.com',
+    }
+    onSendEmail(emailData)
   }
 
   if (!isOpen) return null
 
   return (
     <div className={isOpen ? 'modal' : ''}>
-      {/* Modal Content */}
       <button onClick={onClose}>Close</button>
       <form onSubmit={handleSendClick}>
         <input
