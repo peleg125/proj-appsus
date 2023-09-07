@@ -1,37 +1,39 @@
  /* note list */
- body {
-   background-color: var(--primary-color)
- }
- 
-ul {
-   columns: 4 200px;
+
+.note-container {
+   columns: 6 200px;
    column-gap: 12px;
 }
 
  .main-container {
    color: white;
-
  }
  
- .note-container {
-    border: 1px solid #5f6368;
-    border-radius: 1em;
+ .note {
+   border: 1px solid #5f6368;
+   border-radius: 1em;
    margin-bottom: 1rem;
-   break-inside: avoid;
-   display: flex;
    padding: 10px;
-   flex-direction: column;
  }
 
  .note-txt {
-    display: inline-block;
-    font-size: .875rem;
+   display: inline-block;
+   font-size: .875rem;
  }
 
  .note-title {
     font-size: 1rem;
     margin-bottom: 0;
 
+ }
+
+ .txt-container {
+   display: flex;
+   break-inside: avoid;
+   flex-direction: column;
+   word-wrap: break-word;
+   white-space: pre-wrap;
+   word-break: break-word;
  }
 
 .btn-remove {
