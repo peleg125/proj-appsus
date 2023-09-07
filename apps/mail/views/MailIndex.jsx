@@ -61,7 +61,13 @@ export function MailIndex() {
   }
   function handleDeleteClick(id) {}
   function handleMarkReadClick(id) {
-    mailService
+    mailService.get(id).then((mail) => {
+      const updatedMail = { ...mail, isRead: true }
+      const updatedMails = mails.map((mail) =>
+        mail.id === id ? updatedMail : mail
+      )
+      setMails(updatedMails)
+    })
   }
 
   function handleSaveEmail(mail) {
