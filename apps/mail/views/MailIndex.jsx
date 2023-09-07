@@ -1,23 +1,36 @@
+import { MailList } from '../cmps/MailList.jsx'
+import { MailFilter } from '../cmps/MailFilter.jsx'
+import { MailFolderList } from '../cmps/MailFolderList.jsx'
+import { MailCompose } from '../cmps/MailCompose.jsx'
+import { mailService } from '../services/mail.service.js'
+
 export function MailIndex() {
   const { useState, useEffect } = React
-  const [mails, setMails] = useState([])
-  const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
   const { useNavigate, useParams, useLocation } = ReactRouterDOM
-  const { status } = useParams()
-  const navigate = useNavigate()
+  const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
+  const [mails, setMails] = useState([])
+  const [isComposeOpen, setComposeOpen] = useState(false)
+  const { status: statusParam } = useParams()
   const location = useLocation()
-
-  const query = new URLSearchParams(location.search)
-  const search = query.get('search')
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const filterByFromParams = {
-      ...filterBy,
-      status: status || 'inbox',
-      txt: search || '',
-    }
-    setFilterBy(filterByFromParams)
-  }, [status, search])
+    const queryParams = new URLSearchParams(location.search)
+
+    const txt = queryParams.get('txt')
+    const specialStatus = queryParams.get('in')
+
+    const status = specialStatus ? specialStatus : statusParam
+
+    setFilterBy((prevFilter) => {
+      const newFilter = { ...prevFilter }
+
+      newFilter.status = status ? status : newFilter.status
+      newFilter.txt = txt
+      console.log('new filter', newFilter)
+      return newFilter
+    })
+  }, [location.search, statusParam])
 
   useEffect(() => {
     mailService
@@ -25,22 +38,65 @@ export function MailIndex() {
       .then((fetchedMails) => {
         setMails(fetchedMails)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
   }, [filterBy])
 
+  function handleFolderChange(folder) {
+    setFilterBy((prevFilter) => {
+      const newFilter = { ...prevFilter, txt: `in:${folder}` }
+      return newFilter
+    })
+  }
+
   const handleFilterChange = (newFilterBy) => {
-    navigate(`/mail?status=${newFilterBy.status}&txt=${newFilterBy.txt}`)
+    console.log('New FilterBy', newFilterBy)
+    navigate(`/mail/${newFilterBy.status}?txt=${newFilterBy.txt}`)
+  }
+
+  function handleDraftSave(draft) {
+    // Save the draft and get its ID
+    // const draftId = // save the draft and get its ID (e.g., from an API)
+    // Update the query parameters to include the draft ID
+    // navigate(`/mail/compose?id=${draftId}`)
+  }
+  function handleDeleteClick(id) {}
+  function handleMarkReadClick(id) {
+    mailService
+  }
+
+  function handleSaveEmail(mail) {
+    mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
   }
 
   return (
-    <div className='mail-index grid'>
-      <MailFilter onFilterChange={handleFilterChange} />
-      <MailFolderList
-        onFolderChange={(folder) =>
-          setFilterBy({ ...filterBy, status: folder })
-        }
-      />
-      <MailList mails={mails} />
+    <div className='mail-index'>
+      <div className='sidebar'>
+        <MailFolderList
+          onFolderChange={handleFolderChange}
+          onDeleteClick={handleDeleteClick}
+          onMarkReadClick={handleMarkReadClick}
+        />
+      </div>
+
+      <div className='mail-main-content'>
+        <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
+        <MailList mails={mails} />
+      </div>
+
+      <div className='compose-button'>
+        <button onClick={() => setComposeOpen(true)}>Compose</button>
+      </div>
+
+      {isComposeOpen && (
+        <div className='compose-modal'>
+          <MailCompose
+            isOpen={isComposeOpen}
+            onClose={() => setComposeOpen(false)}
+            onSaveDraft={handleDraftSave}
+            onSendEmail={handleSaveEmail}
+          />
+        </div>
+      )}
     </div>
   )
 }

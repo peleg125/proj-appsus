@@ -1,0 +1,11 @@
+.filter-from {
+  margin-block-end: 2em;
+}
+
+.filter-search {
+  border-radius: 2em;
+}
+
+label {
+  margin-inline-end: 10px;
+}

@@ -1,37 +1,41 @@
 const { Link } = ReactRouterDOM
 
-export function MailList({ mails }) {
+// TODO: ADD CHECKBOX TO FILTER
+export function MailList({ mails, handleDeleteClick, handleMarkReadClick }) {
+  const onDeleteClick = (id) => {
+    handleDeleteClick(id)
+  }
+
+  const onMarkReadClick = (id) => {
+    handleMarkReadClick(id)
+  }
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Select</th>
-          <th>Star</th>
-          <th>Sender</th>
-          <th>Subject & description</th>
-          {/* <th>Labels</th> */}
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div className='mail-list'>
+      <div className='mail-list-body'>
         {mails.map((mail) => (
-          <tr key={mail.id}>
-            <td>
+          <div key={mail.id} className='mail-item mail-grid'>
+            <div>
               <input type='checkbox' />
-            </td>
-            <td>★</td>
-            <td>{mail.from}</td>
-            <td>
+            </div>
+            <div>★</div>
+            <div>{mail.from}</div>
+            <div className='desc-div truncate'>
               <Link to={`/mail/${mail.id}`}>
-                <span className='truncate'>
-                  {mail.subject} - {mail.body}
-                </span>
+                {mail.subject} - {mail.body}
               </Link>
-            </td>
-            <td>{new Date(mail.sentAt).toLocaleString()}</td>
-          </tr>
+            </div>
+            <div>{new Date(mail.sentAt).toLocaleString()}</div>
+            <div className='action-icons'>
+              <button onClick={() => onDeleteClick(mail.id)}>
+                <img src='assets/img/delete.svg'></img>
+              </button>
+              <button onClick={() => onMarkReadClick(mail.id)}>
+                <img src='assets/img/markasread.svg'></img>
+              </button>
+            </div>
+          </div>
         ))}
-      </tbody>
-    </table>
+      </div>
+    </div>
   )
 }
