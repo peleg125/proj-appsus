@@ -1,23 +1,34 @@
+import { MailList } from '../cmps/MailList.jsx'
+import { MailFilter } from '../cmps/MailFilter.jsx'
+import { MailFolderList } from '../cmps/MailFolderList.jsx'
+import { mailService } from '../services/mail.service.js'
+
 export function MailIndex() {
   const { useState, useEffect } = React
-  const [mails, setMails] = useState([])
-  const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
   const { useNavigate, useParams, useLocation } = ReactRouterDOM
-  const { status } = useParams()
-  const navigate = useNavigate()
+  const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
+  const [mails, setMails] = useState([])
+  const { status: statusParam } = useParams()
   const location = useLocation()
-
-  const query = new URLSearchParams(location.search)
-  const search = query.get('search')
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const filterByFromParams = {
-      ...filterBy,
-      status: status || 'inbox',
-      txt: search || '',
-    }
-    setFilterBy(filterByFromParams)
-  }, [status, search])
+    const queryParams = new URLSearchParams(location.search)
+
+    const txt = queryParams.get('txt')
+    const specialStatus = queryParams.get('in')
+
+    const status = specialStatus ? specialStatus : statusParam
+
+    setFilterBy((prevFilter) => {
+      const newFilter = { ...prevFilter }
+
+      newFilter.status = status ? status : newFilter.status
+      newFilter.txt = txt
+      console.log('new filter', newFilter)
+      return newFilter
+    })
+  }, [location.search, statusParam])
 
   useEffect(() => {
     mailService
@@ -25,21 +36,25 @@ export function MailIndex() {
       .then((fetchedMails) => {
         setMails(fetchedMails)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
   }, [filterBy])
 
+  function handleFolderChange(folder) {
+    setFilterBy((prevFilter) => {
+      const newFilter = { ...prevFilter, txt: `in:${folder}` }
+      return newFilter
+    })
+  }
+
   const handleFilterChange = (newFilterBy) => {
-    navigate(`/mail?status=${newFilterBy.status}&txt=${newFilterBy.txt}`)
+    console.log('New FilterBy', newFilterBy)
+    navigate(`/mail/${newFilterBy.status}?txt=${newFilterBy.txt}`)
   }
 
   return (
     <div className='mail-index grid'>
-      <MailFilter onFilterChange={handleFilterChange} />
-      <MailFolderList
-        onFolderChange={(folder) =>
-          setFilterBy({ ...filterBy, status: folder })
-        }
-      />
+      <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
+      <MailFolderList onFolderChange={handleFolderChange} />
       <MailList mails={mails} />
     </div>
   )

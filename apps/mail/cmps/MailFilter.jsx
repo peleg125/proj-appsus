@@ -1,5 +1,6 @@
 export function MailFilter({ onFilterChange }) {
-  const { useState } = React
+  // filterBy - use this when you want to add to search
+  const { useState, useEffect } = React
   const [filterByToEdit, setFilterByToEdit] = useState({
     status: 'inbox',
     txt: '',
@@ -7,6 +8,9 @@ export function MailFilter({ onFilterChange }) {
     isStared: null,
     labels: [],
   })
+  // useEffect(() => {
+  //   setFilterByToEdit(filterBy)
+  // }, [filterBy])
 
   function handleChange({ target }) {
     const field = target.name
@@ -17,11 +21,9 @@ export function MailFilter({ onFilterChange }) {
       case 'range':
         value = +value || ''
         break
-
       case 'checkbox':
         value = target.checked
         break
-
       default:
         break
     }
@@ -31,7 +33,22 @@ export function MailFilter({ onFilterChange }) {
 
   function onSubmitFilter(ev) {
     ev.preventDefault()
-    onFilterChange(filterByToEdit)
+    let specialStatus = null
+    const match = filterByToEdit.txt.match(/in:(\w+)/)
+    if (match) {
+      specialStatus = match[1]
+    }
+
+    if (!specialStatus && filterByToEdit.txt) {
+      specialStatus = 'search'
+    }
+
+    const textWithoutSpecialStatus = filterByToEdit.txt.replace(/in:\w+\s?/, '')
+    onFilterChange({
+      ...filterByToEdit,
+      status: specialStatus || filterByToEdit.status,
+      txt: textWithoutSpecialStatus,
+    })
   }
 
   const { status, txt, isRead, isStared } = filterByToEdit
@@ -40,7 +57,7 @@ export function MailFilter({ onFilterChange }) {
     <form onSubmit={onSubmitFilter}>
       <label>
         Status:
-        <select name='status' value={status} onChange={handleChange}>
+        <select name='status' value={status || 'inbox'} onChange={handleChange}>
           <option value='inbox'>Inbox</option>
           <option value='sent'>Sent</option>
           <option value='trash'>Trash</option>
@@ -58,7 +75,7 @@ export function MailFilter({ onFilterChange }) {
         <input
           type='checkbox'
           name='isRead'
-          checked={isRead}
+          checked={isRead || null}
           onChange={handleChange}
         />
       </label>
@@ -68,7 +85,7 @@ export function MailFilter({ onFilterChange }) {
         <input
           type='checkbox'
           name='isStared'
-          checked={isStared}
+          checked={isStared || null}
           onChange={handleChange}
         />
       </label>
