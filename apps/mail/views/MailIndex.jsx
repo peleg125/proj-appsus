@@ -59,6 +59,10 @@ export function MailIndex() {
     // Update the query parameters to include the draft ID
     // navigate(`/mail/compose?id=${draftId}`)
   }
+  function handleDeleteClick(id) {}
+  function handleMarkReadClick(id) {
+    mailService
+  }
 
   function handleSaveEmail(mail) {
     mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
@@ -67,7 +71,11 @@ export function MailIndex() {
   return (
     <div className='mail-index'>
       <div className='sidebar'>
-        <MailFolderList onFolderChange={handleFolderChange} />
+        <MailFolderList
+          onFolderChange={handleFolderChange}
+          onDeleteClick={handleDeleteClick}
+          onMarkReadClick={handleMarkReadClick}
+        />
       </div>
 
       <div className='mail-main-content'>
