@@ -3,10 +3,10 @@ const { Link, Outlet } = ReactRouterDOM
 
 export function NoteList({ notes, onRemoveNote, onEditNote }) {
   return (
-    <ul>
+    <ul className='note-container'>
       {notes &&
         notes.map((note) => (
-          <li className='note-container' key={note.id}>
+          <li className='note' key={note.id}>
             <button>
               <Link to={`/note/${note.id}`}>Edit</Link>
             </button>
