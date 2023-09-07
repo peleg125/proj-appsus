@@ -13,6 +13,8 @@ export const noteService = {
   getNotes,
 }
 
+function query(filterBy = {}) {}
+
 function getNotes() {
   const notes = utilService.loadFromStorage(NOTE_KEY) || []
   return notes

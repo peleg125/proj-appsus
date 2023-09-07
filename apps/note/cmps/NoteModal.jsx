@@ -1,76 +1,78 @@
-const { useState } = React
+const { useState, useEffect } = React
+const { useNavigate, useParams } = ReactRouterDOM
+
+import { noteService } from "../services/note.service.js"
 import { NoteForm } from "./NoteForm.jsx"
 
-export function NoteModal({ isOpen, onClose, note, onEdit, notes, handleAddNote }) {
+export function NoteModal({ isOpen, onClose }) {
+  const params = useParams()
+  const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(isOpen)
-  const [selectedNote, setSelectedNote] = useState(note)
+  const [selectedNote, setSelectedNote] = useState(null)
+  const [editedTitle, setEditedTitle] = useState("")
+  const [editedText, setEditedText] = useState("")
   const [isEditing, setIsEditing] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(isOpen)
+  const [editedNote, setEditedNote] = useState(null)
 
-  const openModal = (note) => {
-    console.log(note.id)
-    setSelectedNote(note)
-    setIsModalOpen(true)
-    setIsEditing(false)
+  useEffect(() => {
+    if (params.noteId) {
+      noteService.get(params.noteId).then((selectedNote) => {
+        setSelectedNote(selectedNote)
+        setEditedTitle(selectedNote.info.title || "")
+        setEditedText(selectedNote.info.txt || "")
+        setIsEditing(true)
+        setIsModalOpen(true)
+
+        setEditedNote(selectedNote)
+      })
+    }
+  }, [params.noteId])
+
+  function handleChange({ target }) {
+    const field = target.name
+    let value = target.value
+
+    const updatedEditedNote = { ...editedNote }
+    updatedEditedNote.info[field] = value
+
+    setEditedNote(updatedEditedNote)
+
+    if (field === "title") {
+      setEditedTitle(value)
+    } else if (field === "txt") {
+      setEditedText(value)
+    }
   }
 
-  const closeModal = () => {
-    console.log("heyy")
+  function handleEditNote(ev) {
+    ev.preventDefault()
+    noteService.save(editedNote).then(() => {
+      setIsModalOpen(false)
+      onClose && onClose()
+      closeModal()
+    })
+    onNoteUpdated(editedNote)
+  }
+
+  function closeModal() {
     setIsModalOpen(false)
     setSelectedNote(null)
     setIsEditing(false)
-    onClose()
-  }
-
-  const Modal = ({ isOpen, onClose, note, onEdit }) => {
-    if (!isOpen) return null
-
-    const handleEditClick = () => {
-      onEdit(note, true)
-    }
-
-    const handleSaveClick = () => {
-      onEdit(note, false)
-    }
-
-    return (
-      <div className='modal-overlay'>
-        <div className='modal-content'>
-          <button onClick={onClose}>Close</button>
-          <h2>
-            {isEditing ? <input type='text' value={note.title} onChange={(ev) => onEdit({ ...note, title: ev.target.value }, false)} /> : note.title}
-          </h2>
-          <p>
-            {isEditing ? <textarea value={note.content} onChange={(ev) => onEdit({ ...note, content: ev.target.value }, false)} /> : note.content}
-          </p>
-          <NoteForm onAddNote={handleAddNote} />
-        </div>
-      </div>
-    )
+    onClose && onClose()
+    navigate("/note")
   }
 
   return (
-    <div className='App'>
-      <h1>My Notes</h1>
-      <ul>
-        {notes.map((note) => (
-          <li key={note.id} onClick={() => openModal(note)}>
-            {note.title}
-          </li>
-        ))}
-      </ul>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        x
-        note={selectedNote}
-        onEdit={(updatedNote, isEditing) => {
-          if (!isEditing) {
-            console.log("Saving changes...", updatedNote)
-          }
-          setSelectedNote(updatedNote)
-          setIsEditing(isEditing)
-        }}
-      />
+    <div className={`modal-overlay ${isModalOpen ? "show" : ""}`}>
+      <div className='modal-content'>
+        <button onClick={closeModal}>Close</button>
+        <form>
+          <input onChange={handleChange} className='text-title' name='title' type='text' value={editedTitle} id='edited-title' />
+          <input onChange={handleChange} className='text-note' name='txt' type='text' value={editedText} id='edited-text' />
+          <button onClick={handleEditNote}>Save</button>
+        </form>
+      </div>
     </div>
   )
 }

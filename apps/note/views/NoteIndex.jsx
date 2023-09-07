@@ -1,4 +1,6 @@
 const { useEffect, useState } = React
+const { Link } = ReactRouterDOM
+
 import { noteService } from "../services/note.service.js"
 import { NoteList } from "../cmps/NoteList.jsx"
 import { NoteForm } from "../cmps/NoteForm.jsx"
@@ -8,12 +10,14 @@ export function NoteIndex() {
   const [notes, setNotes] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedNote, setSelectedNote] = useState(null)
+
   useEffect(() => {
     const fetchedNotes = noteService.getNotes()
     setNotes(fetchedNotes)
   }, [])
 
   function handleAddNote(newNote) {
+    console.log("hey")
     setNotes((prevNotes) => [...prevNotes, newNote])
   }
 
@@ -29,30 +33,39 @@ export function NoteIndex() {
       })
   }
 
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedNote(null)
+  }
+
   function onEditNote(note) {
-    setSelectedNote(note)
+    console.log(note.id, "modal is open")
+    // setSelectedNote(note)
+    console.log(note)
     setIsModalOpen(true)
+    console.log(isModalOpen)
+  }
+
+  function handleNoteUpdated(updatedNote) {
+    // Find the index of the updated note in the notes array
+    const updatedNoteIndex = notes.findIndex((note) => note.id === updatedNote.id)
+
+    if (updatedNoteIndex !== -1) {
+      // Create a copy of the current notes array
+      const updatedNotes = [...notes]
+
+      // Replace the old note with the updated note
+      updatedNotes[updatedNoteIndex] = updatedNote
+
+      // Update the notes state with the updated array
+      setNotes(updatedNotes)
+    }
   }
 
   return (
     <div className='main-container'>
-      <NoteForm onAddNote={handleAddNote} />
+      <NoteForm isModalOpen={isModalOpen} onAddNote={handleAddNote} />
       <NoteList notes={notes} onRemoveNote={onRemoveNote} onEditNote={onEditNote} />
-
-      {isModalOpen && (
-        <NoteModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          note={selectedNote}
-          onEdit={(note, edit) => {
-            if (edit) {
-              console.log("Saving changes...")
-            }
-          }}
-          notes={notes}
-          handleAddNote={handleAddNote}
-        />
-      )}
     </div>
   )
 }

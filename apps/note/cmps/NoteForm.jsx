@@ -1,8 +1,14 @@
 import { noteService } from "../services/note.service.js"
-const { useState } = React
+const { useState, useEffect } = React
 
-export function NoteForm({ onAddNote }) {
+export function NoteForm({ onAddNote, isEditing, isModalOpen, onEdit }) {
   const [noteToAdd, setNoteToAdd] = useState({ title: "", txt: "" })
+
+  useEffect(() => {
+    if (isEditing) {
+      setNoteToAdd()
+    }
+  }, [])
 
   function handleChange({ target }) {
     const field = target.name
@@ -21,15 +27,25 @@ export function NoteForm({ onAddNote }) {
       default:
         break
     }
-
     setNoteToAdd({ ...noteToAdd, [field]: value })
   }
 
   function addNote(ev) {
     ev.preventDefault()
-    const newNote = noteService.createNote(noteToAdd.title, noteToAdd.txt)
-    onAddNote(newNote)
-    setNoteToAdd(noteService.getEmptyNote())
+    console.log("modal", isModalOpen)
+    console.log("isedit", isEditing)
+    if (!isModalOpen) {
+      const newNote = noteService.createNote(noteToAdd.title, noteToAdd.txt)
+      onAddNote(newNote)
+      setNoteToAdd(noteService.getEmptyNote())
+    } else {
+      console.log("editing is true")
+      editNote()
+    }
+  }
+
+  function editNote() {
+    selectedNote.id
   }
 
   const { title, txt } = noteToAdd

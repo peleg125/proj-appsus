@@ -1,14 +1,26 @@
  /* note list */
+ body {
+   background-color: var(--primary-color)
+ }
+ 
+ul {
+   columns: 4 200px;
+   column-gap: 12px;
+}
+
  .main-container {
-   background-color: #202124;
    color: white;
+
  }
  
  .note-container {
     border: 1px solid #5f6368;
-    width: 238px;
     border-radius: 1em;
-    height: 100px
+   margin-bottom: 1rem;
+   break-inside: avoid;
+   display: flex;
+   padding: 10px;
+   flex-direction: column;
  }
 
  .note-txt {
