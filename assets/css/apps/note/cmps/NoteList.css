@@ -1,29 +1,33 @@
  /* note list */
 
 .note-container {
-   columns: 6 200px;
+   display: block;
+   columns: 6 200px ;
    column-gap: 12px;
 }
 
- .main-container {
-   color: white;
- }
- 
- .note {
+.note {
    border: 1px solid #5f6368;
    border-radius: 1em;
    margin-bottom: 1rem;
    padding: 10px;
- }
+   break-inside: avoid;
+}
 
+.main-container {
+   color: white;
+   height: 100vh;
+ }
+ 
+ 
  .note-txt {
-   display: inline-block;
-   font-size: .875rem;
- }
-
- .note-title {
-    font-size: 1rem;
-    margin-bottom: 0;
+    display: inline-block;
+    font-size: .875rem;
+   }
+   
+   .note-title {
+   font-size: 1rem;
+   margin-bottom: 0;
 
  }
 
@@ -36,6 +40,24 @@
    word-break: break-word;
  }
 
+ .note:hover .remove-icon {
+   visibility: visible;
+   opacity: 1; 
+   transition: opacity 0.5s; 
+}
+
+.remove-icon {
+   visibility: hidden;
+   opacity: 0; 
+   transition: opacity 0.5s; 
+}
+
 .btn-remove {
    z-index: 10;
+   margin-left: 10px;
+   background: none;
+   border: none;
+   cursor: pointer;
 }
+
+

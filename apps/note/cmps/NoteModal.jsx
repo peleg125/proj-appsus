@@ -66,11 +66,17 @@ export function NoteModal({ isOpen, onClose }) {
   return (
     <div className={`modal-overlay ${isModalOpen ? "show" : ""}`}>
       <div className='modal-content'>
-        <button onClick={closeModal}>Close</button>
-        <form>
-          <input onChange={handleChange} className='text-title' name='title' type='text' value={editedTitle} id='edited-title' />
-          <input onChange={handleChange} className='text-note' name='txt' type='text' value={editedText} id='edited-text' />
-          <button onClick={handleEditNote}>Save</button>
+        <form className='edit-container'>
+          <textarea
+            className='textarea-edit textarea-edit-title'
+            onChange={handleChange}
+            name='title'
+            type='text'
+            value={editedTitle}
+            id='edited-title'
+          />
+          <textarea className='textarea-edit textarea-edit-text' onChange={handleChange} name='txt' type='text' value={editedText} id='edited-text' />
+          <button onClick={handleEditNote}>Close</button>
         </form>
       </div>
     </div>
