@@ -1,5 +1,5 @@
-export function MailFilter({ onFilterChange }) {
-  // filterBy - use this when you want to add to search
+export function MailFilter({ onFilterChange, filterBy }) {
+  // filterBy - use this when you want to add to search - add to props
   const { useState, useEffect } = React
   const [filterByToEdit, setFilterByToEdit] = useState({
     status: 'inbox',
@@ -8,9 +8,9 @@ export function MailFilter({ onFilterChange }) {
     isStared: null,
     labels: [],
   })
-  // useEffect(() => {
-  //   setFilterByToEdit(filterBy)
-  // }, [filterBy])
+  useEffect(() => {
+    setFilterByToEdit(filterBy)
+  }, [filterBy])
 
   function handleChange({ target }) {
     const field = target.name
@@ -52,6 +52,7 @@ export function MailFilter({ onFilterChange }) {
   }
 
   const { status, txt, isRead, isStared } = filterByToEdit
+  console.log('status, txt, isRead, isStared', status, txt, isRead, isStared)
 
   return (
     <form className='filter-from' onSubmit={onSubmitFilter}>
@@ -65,7 +66,7 @@ export function MailFilter({ onFilterChange }) {
         </select>
       </label>
 
-      <label>
+      <label title='Search'>
         Search:
         <input
           className='filter-search'
@@ -76,7 +77,7 @@ export function MailFilter({ onFilterChange }) {
         />
       </label>
 
-      <label>
+      <label title='Filter by read/unread'>
         Read:
         <input
           type='checkbox'
@@ -86,7 +87,7 @@ export function MailFilter({ onFilterChange }) {
         />
       </label>
 
-      <label>
+      <label title='Show only stared'>
         Starred:
         <input
           type='checkbox'

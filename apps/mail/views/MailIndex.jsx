@@ -63,10 +63,12 @@ export function MailIndex() {
   }
   function handleMarkReadClick(id) {
     mailService.get(id).then((mail) => {
-      const updatedMail = { ...mail, isRead: true }
+      const updatedMail = { ...mail }
+      updatedMail.isRead = !updatedMail.isRead
       const updatedMails = mails.map((mail) =>
         mail.id === id ? updatedMail : mail
       )
+      console.log('from handle mark read', updatedMail)
       setMails(updatedMails)
     })
   }

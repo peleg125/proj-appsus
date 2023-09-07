@@ -26,11 +26,14 @@ export function MailList({ mails, onDeleteClick, onMarkReadClick }) {
             </div>
             <div>{new Date(mail.sentAt).toLocaleString()}</div>
             <div className='action-icons'>
-              <button onClick={() => handleDeleteClick(mail.id)}>
+              <button title='Delete' onClick={() => handleDeleteClick(mail.id)}>
                 <img src='assets/img/delete.svg'></img>
               </button>
-              <button onClick={() => handleMarkReadClick(mail.id)}>
-                <img src='assets/img/markasread.svg'></img>
+              <button
+                title='Mark as read'
+                onClick={() => handleMarkReadClick(mail.id)}
+              >
+                <img src='assets/img/markasread.svg' alt='Mark As Read'></img>
               </button>
             </div>
           </div>
