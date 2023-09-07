@@ -27,7 +27,6 @@ export function MailIndex() {
 
       newFilter.status = status ? status : newFilter.status
       newFilter.txt = txt
-      console.log('new filter', newFilter)
       return newFilter
     })
   }, [location.search, statusParam])
@@ -59,7 +58,9 @@ export function MailIndex() {
     // Update the query parameters to include the draft ID
     // navigate(`/mail/compose?id=${draftId}`)
   }
-  function handleDeleteClick(id) {}
+  function handleDeleteClick(id) {
+    mailService.remove(id)
+  }
   function handleMarkReadClick(id) {
     mailService.get(id).then((mail) => {
       const updatedMail = { ...mail, isRead: true }
@@ -77,16 +78,16 @@ export function MailIndex() {
   return (
     <div className='mail-index'>
       <div className='sidebar'>
-        <MailFolderList
-          onFolderChange={handleFolderChange}
-          onDeleteClick={handleDeleteClick}
-          onMarkReadClick={handleMarkReadClick}
-        />
+        <MailFolderList onFolderChange={handleFolderChange} />
       </div>
 
       <div className='mail-main-content'>
         <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
-        <MailList mails={mails} />
+        <MailList
+          mails={mails}
+          onDeleteClick={handleDeleteClick}
+          onMarkReadClick={handleMarkReadClick}
+        />
       </div>
 
       <div className='compose-button'>
