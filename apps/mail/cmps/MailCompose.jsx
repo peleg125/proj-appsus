@@ -28,8 +28,8 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
     return () => clearInterval(interval)
   }, [])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
+  const handleChange = (ev) => {
+    const { name, value } = ev.target
     setDraft({
       ...draft,
       [name]: value,

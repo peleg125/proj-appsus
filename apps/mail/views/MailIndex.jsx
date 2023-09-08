@@ -111,7 +111,9 @@ export function MailIndex() {
   }
 
   function handleSaveEmail(mail) {
-    mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
+    mailService.addDraftMail(mail).then(console.log)
+
+    // mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
   }
 
   return (

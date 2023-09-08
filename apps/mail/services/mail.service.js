@@ -8,6 +8,7 @@ export const mailService = {
   update,
   remove,
   getDefaultMailFilter,
+  addDraftMail,
 }
 const MAILS_KEY = 'emailsDB'
 const demoMails = [
@@ -261,14 +262,6 @@ function query(filterBy = {}) {
         // console.log('fechedMails by after trash - ', filteredMails)
       }
     }
-    // TODO: delete if works
-    // else if (filterBy.status === 'starred') {
-    //   filteredMails = filteredMails.filter((mail) => mail.isStarred === true)
-    // console.log('Filter by after starred - ', filterBy)
-    // console.log('fechedMails by after starred - ', filteredMails)
-    // }
-    // console.log('Filter by end - ', filterBy)
-    // console.log('fechedMails by end - ', filteredMails)
     if (filterBy.txt) {
       const txt = new RegExp(filterBy.txt, 'i')
       filteredMails = filteredMails.filter(
@@ -307,9 +300,9 @@ function query(filterBy = {}) {
   })
 }
 
-function get(emailId) {
+function get(mailId) {
   return storageService
-    .get(MAILS_KEY, emailId)
+    .get(MAILS_KEY, mailId)
     .then((mail) => {
       mail = _setNextPrevMailId(mail)
       return mail
@@ -317,16 +310,16 @@ function get(emailId) {
     .catch((err) => console.log(err))
 }
 
-function add(email) {
-  return storageService.post(MAILS_KEY, email)
+function add(mail) {
+  return storageService.post(MAILS_KEY, mail)
 }
 
-function update(email) {
-  return storageService.put(MAILS_KEY, email)
+function update(mail) {
+  return storageService.put(MAILS_KEY, mail)
 }
 
-function remove(emailId) {
-  return storageService.remove(MAILS_KEY, emailId)
+function remove(mailId) {
+  return storageService.remove(MAILS_KEY, mailId)
 }
 
 function getDefaultMailFilter() {
@@ -337,6 +330,17 @@ function getDefaultMailFilter() {
     isStared: null,
     labels: [],
   }
+}
+function addDraftMail(mail) {
+  const mailTemplate = _createMail()
+  const draftMail = {
+    ...mailTemplate,
+    ...mail,
+    sentAt: Date.now(),
+    isRead: true,
+  }
+  console.log('from draftMail', draftMail)
+  return storageService.post(MAILS_KEY, draftMail)
 }
 
 function _createMail() {
