@@ -30,6 +30,7 @@
   }
   
   .custom-select {
+    position: absolute;
     appearance: none; 
     visibility: hidden;
     background: url('../../../../../assets/img/palette.svg') no-repeat right center; 
@@ -38,6 +39,10 @@
     visibility: hidden;
     opacity: 0; 
     transition: opacity 0.5s; 
+    bottom: 5px;
+    left: 10px;
+    width: 25px;
+    height: 25px;
   }
 
   .note:hover .custom-select {

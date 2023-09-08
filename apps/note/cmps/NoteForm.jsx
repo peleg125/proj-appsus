@@ -40,7 +40,6 @@ export function NoteForm({ onAddNote, isEditing, noteToEdit, onSaveEdit }) {
       setNoteToAdd({ title: "", txt: "" })
     } else {
       onSaveEdit({ ...noteToEdit, ...noteToAdd })
-      // You can also reset the form or close the edit mode here
     }
   }
 
