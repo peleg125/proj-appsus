@@ -13,6 +13,13 @@ export function MailFolderList({ onFolderChange }) {
       <Link title='Sent' to='/mail/sent' onClick={() => handleClick('sent')}>
         Sent
       </Link>
+      <Link
+        title='Starred'
+        to='/mail/starred'
+        onClick={() => handleClick('starred')}
+      >
+        Starred
+      </Link>
       <Link title='Trash' to='/mail/trash' onClick={() => handleClick('trash')}>
         Trash
       </Link>

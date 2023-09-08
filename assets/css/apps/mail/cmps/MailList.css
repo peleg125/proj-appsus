@@ -15,6 +15,14 @@
   display: grid;
 }
 
+.star-btn {
+  /* margin-left: 10px; */
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
 .mail-list-header {
   font-weight: bold;
 }
@@ -60,4 +68,24 @@
   background: none;
   border: none;
   cursor: pointer;
+  position: relative;
+}
+
+.action-icons button:hover::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2b2b2b;
+  opacity: 0.8;
+  border-radius: 50%;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.unread-mail {
+  background-color: #2b2b2b;
 }
