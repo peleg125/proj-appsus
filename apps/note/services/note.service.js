@@ -10,10 +10,24 @@ export const noteService = {
   save,
   remove,
   get,
+  update,
   getNotes,
+  query,
+  getDefaultFilter,
 }
 
-function query(filterBy = {}) {}
+function query(filterBy = {}) {
+  return storageService.query(NOTE_KEY).then((notes) => {
+    if (filterBy.txt) {
+      const regExp = new RegExp(filterBy.txt, "i")
+      notes = notes.filter((note) => regExp.test(note.info.title) || regExp.test(note.info.txt))
+    }
+    if (filterBy.type) {
+      notes = notes.filter((note) => note.type === filterBy.type)
+    }
+    return notes
+  })
+}
 
 function getNotes() {
   const notes = utilService.loadFromStorage(NOTE_KEY) || []
@@ -29,15 +43,19 @@ function remove(noteId) {
 }
 
 function save(note) {
-  if (note.id) {
-    return storageService.put(NOTE_KEY, note)
-  } else {
-    return storageService.post(NOTE_KEY, note)
-  }
+  return storageService.post(NOTE_KEY, note)
+}
+
+function update(note) {
+  return storageService.put(NOTE_KEY, note)
 }
 
 function getEmptyNote(txt = "", title = "") {
   return { info: { txt, title } }
+}
+
+function getDefaultFilter() {
+  return { txt: "", title: "", type: "" }
 }
 
 function _createNotes() {
@@ -69,36 +87,39 @@ function _createNotes() {
           title: "MEeeeeeeeeeee",
         },
       },
-      // {
-      //   id: "n102",
-      //   type: "NoteImg",
-      //   isPinned: false,
-      //   info: {
-      //     url: "http://some-img/me",
-      //     title: "Bobi and Me",
-      //   },
-      //   style: {
-      //     backgroundColor: "#00d",
-      //   },
-      // },
-      // {
-      //   id: "n103",
-      //   type: "NoteTodos",
-      //   isPinned: false,
-      //   info: {
-      //     title: "Get my stuff together",
-      //     todos: [
-      //       { txt: "Driving license", doneAt: null },
-      //       { txt: "Coding power", doneAt: 187111111 },
-      // ],
-      //   },
-      // },
+      {
+        id: "n103",
+        type: "NoteImg",
+        isPinned: false,
+        info: {
+          url: "http://some-img/me",
+          title: "Bobi and Me",
+        },
+        style: {
+          backgroundColor: "#00d",
+        },
+      },
+      {
+        id: "n104",
+        type: "NoteTodos",
+        isPinned: false,
+        style: {
+          backgroundColor: "#00d",
+        },
+        info: {
+          title: "Get my stuff together",
+          todos: [
+            { txt: "Driving license", doneAt: null },
+            { txt: "Coding power", doneAt: 187111111 },
+          ],
+        },
+      },
     ]
     utilService.saveToStorage(NOTE_KEY, notes)
   }
 }
 
-function createNote(title, txt) {
+function createNote(title, txt, url) {
   const newNote = {
     id: utilService.makeId(),
     type: "NoteTxt",
@@ -109,6 +130,7 @@ function createNote(title, txt) {
     info: {
       title: title || "",
       txt: txt || "",
+      url: url,
     },
   }
   let notes = utilService.loadFromStorage(NOTE_KEY)
@@ -116,11 +138,3 @@ function createNote(title, txt) {
   utilService.saveToStorage(NOTE_KEY, notes)
   return newNote
 }
-// storageService
-//   .post(NOTE_KEY, newNote)
-//   .then((savedNote) => {
-//     console.log("Note saved:", savedNote)
-//   })
-//   .catch((error) => {
-//     console.error("Error saving note:", error)
-//   })

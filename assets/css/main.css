@@ -1,6 +1,7 @@
 /* Setup */
 
 @import './setup/variables.css';
+@import './setup/typograpghy.css';
 /* @import './setup/fonts.css'; */
 
 /* Basics */
@@ -23,5 +24,7 @@
 @import './cmps/AppHeader.css';
 @import './apps/note/cmps/NoteList.css';
 @import './apps/note/cmps/NoteModal.css';
+@import './apps/note/cmps/NoteColors.css';
+@import './apps/note/cmps/NoteForm.css';
 
 @import './apps/mail/cmps/MailList.css';

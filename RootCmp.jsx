@@ -1,13 +1,14 @@
 const { Route, Routes } = ReactRouterDOM
 const Router = ReactRouterDOM.HashRouter
 
-import { AppHeader } from './cmps/AppHeader.jsx'
-import { About } from './views/About.jsx'
-import { Home } from './views/Home.jsx'
-import { MailIndex } from './apps/mail/views/MailIndex.jsx'
-import { NoteIndex } from './apps/note/views/NoteIndex.jsx'
-import { NoteModal } from './apps/note/cmps/NoteModal.jsx'
-import { MailDetails } from './apps/mail/views/MailDetails.jsx'
+import { AppHeader } from "./cmps/AppHeader.jsx"
+import { About } from "./views/About.jsx"
+import { Home } from "./views/Home.jsx"
+import { MailIndex } from "./apps/mail/views/MailIndex.jsx"
+import { NoteIndex } from "./apps/note/views/NoteIndex.jsx"
+import { NoteModal } from "./apps/note/cmps/NoteModal.jsx"
+import { MailDetails } from "./apps/mail/views/MailDetails.jsx"
+import { NoteEdit } from "./apps/note/views/NoteEdit.jsx"
 
 // import { BookIndex } from "./apps/book/views/BookIndex.jsx"
 

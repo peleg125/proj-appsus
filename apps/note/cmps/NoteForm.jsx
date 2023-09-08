@@ -1,14 +1,14 @@
 import { noteService } from "../services/note.service.js"
 const { useState, useEffect } = React
 
-export function NoteForm({ onAddNote, isEditing, isModalOpen, onEdit }) {
+export function NoteForm({ onAddNote, isEditing, noteToEdit, onSaveEdit }) {
   const [noteToAdd, setNoteToAdd] = useState({ title: "", txt: "" })
 
   useEffect(() => {
     if (isEditing) {
-      setNoteToAdd()
+      setNoteToAdd({ ...noteToEdit })
     }
-  }, [])
+  }, [isEditing, noteToEdit])
 
   function handleChange({ target }) {
     const field = target.name
@@ -27,35 +27,33 @@ export function NoteForm({ onAddNote, isEditing, isModalOpen, onEdit }) {
       default:
         break
     }
+
     setNoteToAdd({ ...noteToAdd, [field]: value })
   }
 
-  function addNote(ev) {
+  function handleFormSubmit(ev) {
     ev.preventDefault()
-    console.log("modal", isModalOpen)
-    console.log("isedit", isEditing)
-    if (!isModalOpen) {
+
+    if (!isEditing) {
       const newNote = noteService.createNote(noteToAdd.title, noteToAdd.txt)
       onAddNote(newNote)
-      setNoteToAdd(noteService.getEmptyNote())
+      setNoteToAdd({ title: "", txt: "" })
     } else {
-      console.log("editing is true")
-      editNote()
+      onSaveEdit({ ...noteToEdit, ...noteToAdd })
+      // You can also reset the form or close the edit mode here
     }
-  }
-
-  function editNote() {
-    selectedNote.id
   }
 
   const { title, txt } = noteToAdd
 
   return (
     <div>
-      <form className='form-container'>
+      <form className='form-container' onSubmit={handleFormSubmit}>
         <input className='text-title' value={title} name='title' onChange={handleChange} type='text' placeholder='Title' />
         <input className='text-note' value={txt} name='txt' onChange={handleChange} type='text' placeholder='Take a note...' />
-        <button onClick={addNote}>Close</button>
+        <button className='btn-form' type='submit'>
+          {isEditing ? "Save Edit" : "Add Note"}
+        </button>
       </form>
     </div>
   )

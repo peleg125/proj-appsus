@@ -1,0 +1,49 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .text-title,
+  .text-note {
+    background-color: var(--primary-color);
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  .btn-form {
+    background-color: #3e4246;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .custom-select {
+    appearance: none; 
+    visibility: hidden;
+    background: url('../../../../../assets/img/palette.svg') no-repeat right center; 
+    border: none;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0; 
+    transition: opacity 0.5s; 
+  }
+
+  .note:hover .custom-select {
+    visibility: visible;
+    opacity: 1; 
+    transition: opacity 0.5s; 
+ }
+  
+  

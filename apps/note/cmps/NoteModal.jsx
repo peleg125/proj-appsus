@@ -2,6 +2,7 @@ const { useState, useEffect } = React
 const { useNavigate, useParams } = ReactRouterDOM
 
 import { noteService } from "../services/note.service.js"
+import { NoteEdit } from "../views/NoteEdit.jsx"
 import { NoteForm } from "./NoteForm.jsx"
 
 export function NoteModal({ isOpen, onClose }) {
@@ -66,18 +67,7 @@ export function NoteModal({ isOpen, onClose }) {
   return (
     <div className={`modal-overlay ${isModalOpen ? "show" : ""}`}>
       <div className='modal-content'>
-        <form className='edit-container'>
-          <textarea
-            className='textarea-edit textarea-edit-title'
-            onChange={handleChange}
-            name='title'
-            type='text'
-            value={editedTitle}
-            id='edited-title'
-          />
-          <textarea className='textarea-edit textarea-edit-text' onChange={handleChange} name='txt' type='text' value={editedText} id='edited-text' />
-          <button onClick={handleEditNote}>Close</button>
-        </form>
+        <NoteEdit />
       </div>
     </div>
   )
