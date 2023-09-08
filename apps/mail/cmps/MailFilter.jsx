@@ -59,7 +59,8 @@ export function MailFilter({ onFilterChange, filterBy }) {
   }
 
   const { status, txt, isRead, isStarred } = filterByToEdit
-  console.log(`status: ${status}, 
+  console.log(`from mailFilter - 
+  status: ${status}, 
   txt: ${txt}, 
   isRead: ${isRead}, 
   isStarred:${isStarred}`)

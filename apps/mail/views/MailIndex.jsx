@@ -18,14 +18,16 @@ export function MailIndex() {
     const queryParams = new URLSearchParams(location.search)
 
     const txt = queryParams.get('txt')
-    const specialStatus = queryParams.get('in')
+    // const specialStatus = queryParams.get('in')
 
-    const status = specialStatus ? specialStatus : statusParam
+    const status = statusParam
+    // const status = specialStatus ? specialStatus : statusParam
 
     setFilterBy((prevFilter) => {
       const newFilter = { ...prevFilter }
 
-      newFilter.status = status ? status : newFilter.status
+      newFilter.status = status
+      // newFilter.status = status ? status : newFilter.status
       newFilter.txt = txt
       return newFilter
     })
@@ -34,26 +36,20 @@ export function MailIndex() {
   useEffect(() => {
     mailService
       .query(filterBy)
-      .then((fetchedMails) => {
-        setMails(fetchedMails)
-      })
+      .then((fetchedMails) => setMails(fetchedMails))
       .catch((err) => console.error(err))
   }, [filterBy])
 
-  function handleFolderChange(folder) {
-    setFilterBy((prevFilter) => {
-      const newFilter = { ...prevFilter, txt: `in:${folder}` }
-      return newFilter
-    })
-  }
-
-  const handleFilterChange = (newFilterBy) => {
+  function handleFilterChange(newFilterBy) {
     navigate(
       `/mail/${newFilterBy.status}${
         newFilterBy.txt ? `?txt=${newFilterBy.txt}` : ''
       }`
     )
-    setFilterBy(newFilterBy)
+    setFilterBy((prevFilter) => {
+      const newFilter = { ...prevFilter, ...newFilterBy }
+      return newFilter
+    })
   }
 
   function handleDraftSave(draft) {
@@ -93,7 +89,7 @@ export function MailIndex() {
       .get(id)
       .then((mail) => {
         const updatedMail = { ...mail }
-        updatedMail.isRead = !updatedMail.isRead
+        updatedMail.isRead = updatedMail.isRead ? false : true
         return updatedMail
       })
       .then((updatedMail) => {
@@ -101,8 +97,9 @@ export function MailIndex() {
           const updatedMails = mails.map((mail) =>
             mail.id === id ? updatedMail : mail
           )
-          console.log('from handle read', updatedMail)
+          console.log('from handle isRead', updatedMail)
           setMails(updatedMails)
+          console.log('mails after set mails', mails)
         })
       })
       .catch((error) => {
@@ -111,7 +108,7 @@ export function MailIndex() {
   }
 
   function handleSaveEmail(mail) {
-    mailService.addDraftMail(mail).then(console.log)
+    mailService.add(mail).then(console.log)
 
     // mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
   }
@@ -119,7 +116,7 @@ export function MailIndex() {
   return (
     <div className='mail-index'>
       <div className='sidebar'>
-        <MailFolderList onFolderChange={handleFolderChange} />
+        <MailFolderList />
       </div>
 
       <div className='mail-main-content'>

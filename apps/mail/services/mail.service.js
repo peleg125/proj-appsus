@@ -117,7 +117,7 @@ const demoMails = [
     subject: 'Re: Dinner Plans for Friday Night?',
     body: "Hey there! How about trying that new Italian place for dinner on Friday? Let me know if you're in!",
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1664531200000,
     from: 'friend@example.com',
     to: 'user@appsus.com',
@@ -127,7 +127,7 @@ const demoMails = [
     subject: 'Urgent: Project Deadline Approaching',
     body: "We're getting closer to the project deadline. Your input is crucial! Please review and share your thoughts ASAP.",
     isRead: false,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1659724800000,
     from: 'boss@company.com',
     to: 'user@appsus.com',
@@ -147,7 +147,7 @@ const demoMails = [
     subject: 'Congratulations on Your Promotion!',
     body: "You've earned it! Celebrate your success and take on this new role with confidence.",
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1662844800000,
     from: 'hr@company.com',
     to: 'user@appsus.com',
@@ -157,7 +157,7 @@ const demoMails = [
     subject: 'Weekly Newsletter: Tech Trends & Innovations',
     body: 'Stay ahead in the tech world with our latest newsletter. Explore emerging trends and groundbreaking innovations.',
     isRead: false,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1663473600000,
     from: 'technews@innovate.com',
     to: 'user@appsus.com',
@@ -167,7 +167,7 @@ const demoMails = [
     subject: 'Payment Received - Thank You!',
     body: 'Your recent payment has been successfully received. We appreciate your business and look forward to serving you again.',
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1658726400000,
     from: 'billing@businessco.com',
     to: 'user@appsus.com',
@@ -187,7 +187,7 @@ const demoMails = [
     subject: 'Important Tax Documents Attached',
     body: 'Your tax documents for the year are attached. Please review them and file your taxes accordingly.',
     isRead: false,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1657478400000,
     from: 'finance@taxfirm.com',
     to: 'user@appsus.com',
@@ -197,7 +197,7 @@ const demoMails = [
     subject: 'Reminder: Parent-Teacher Conference Tomorrow',
     body: "Don't forget about the parent-teacher conference scheduled for tomorrow. Your child's progress is our priority.",
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1664217600000,
     from: 'schooladmin@example.com',
     to: 'user@appsus.com',
@@ -207,7 +207,7 @@ const demoMails = [
     subject: 'Exclusive Discount for You!',
     body: "You're one of our valued customers. Enjoy an exclusive 20% discount on your next purchase as a token of our appreciation.",
     isRead: true,
-    isRemoved: true,
+    isRemoved: 1662403200000,
     sentAt: 1662403200000,
     from: 'customerloyalty@example.com',
     to: 'user@appsus.com',
@@ -234,32 +234,37 @@ function query(filterBy = {}) {
     let filteredMails = mails
 
     if (filterBy.status) {
-      if (
-        filterBy.status === 'starred' &&
-        filterBy.hasOwnProperty('isStarred') &&
-        filterBy.isStarred !== null
-      ) {
-      } else if (filterBy.status === 'starred') {
-        filteredMails = filteredMails.filter((mail) => mail.isStarred === true)
-      }
-      // console.log('Filter by before status - ', filterBy)
-      // console.log('fechedMails by before status - ', filteredMails)
-      if (filterBy.status === 'inbox') {
-        filteredMails = filteredMails.filter(
-          (mail) => mail.to === loggedinUser.mail
-        )
-        // console.log('Filter by after inbox - ', filterBy)
-        // console.log('fechedMails by after inbox - ', filteredMails)
-      } else if (filterBy.status === 'sent') {
-        filteredMails = filteredMails.filter(
-          (mail) => mail.from === loggedinUser.mail
-        )
-        // console.log('Filter by after sent - ', filterBy)
-        // console.log('fechedMails by after sent - ', filteredMails)
-      } else if (filterBy.status === 'trash') {
-        filteredMails = filteredMails.filter((mail) => mail.removedAt !== null)
-        // console.log('Filter by after trash - ', filterBy)
-        // console.log('fechedMails by after trash - ', filteredMails)
+      switch (filterBy.status) {
+        case 'starred':
+          if (
+            filterBy.hasOwnProperty('isStarred') &&
+            filterBy.isStarred !== null
+          ) {
+            console.log('true from starred query')
+          } else {
+            filteredMails = filteredMails.filter(
+              (mail) => mail.isStarred === true
+            )
+          }
+          break
+        case 'inbox':
+          filteredMails = filteredMails.filter(
+            (mail) => mail.to === loggedinUser.mail && mail.removedAt === null
+          )
+          break
+        case 'sent':
+          filteredMails = filteredMails.filter(
+            (mail) => mail.from === loggedinUser.mail && mail.removedAt === null
+          )
+          break
+        case 'trash':
+          filteredMails = filteredMails.filter(
+            (mail) => mail.removedAt !== null
+          )
+          break
+        default:
+          // Default case if the status doesn't match any known statuses.
+          break
       }
     }
     if (filterBy.txt) {
@@ -311,7 +316,15 @@ function get(mailId) {
 }
 
 function add(mail) {
-  return storageService.post(MAILS_KEY, mail)
+  const mailTemplate = _createMail()
+  const tempMail = {
+    ...mailTemplate,
+    ...mail,
+    sentAt: Date.now(),
+    isRead: true,
+  }
+  console.log('from tempMail', tempMail)
+  return storageService.post(MAILS_KEY, tempMail)
 }
 
 function update(mail) {
@@ -331,17 +344,7 @@ function getDefaultMailFilter() {
     labels: [],
   }
 }
-function addDraftMail(mail) {
-  const mailTemplate = _createMail()
-  const draftMail = {
-    ...mailTemplate,
-    ...mail,
-    sentAt: Date.now(),
-    isRead: true,
-  }
-  console.log('from draftMail', draftMail)
-  return storageService.post(MAILS_KEY, draftMail)
-}
+function addDraftMail(mail) {}
 
 function _createMail() {
   return {

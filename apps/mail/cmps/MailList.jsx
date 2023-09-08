@@ -11,7 +11,8 @@ export function MailList({
     onDeleteClick(id)
   }
 
-  function handleMarkReadClick(id) {
+  function handleMarkReadClick(id, ev) {
+    ev.stopPropagation()
     onMarkReadClick(id)
   }
 
@@ -45,8 +46,8 @@ export function MailList({
             <div>{mail.from}</div>
 
             <div
-              onClick={() => {
-                handleMarkReadClick(mail.id)
+              onClick={(event) => {
+                handleMarkReadClick(mail.id, event)
               }}
               className='desc-div truncate'
             >
@@ -64,7 +65,7 @@ export function MailList({
 
               <button
                 title='Mark as read'
-                onClick={() => handleMarkReadClick(mail.id)}
+                onClick={(event) => handleMarkReadClick(mail.id, event)}
               >
                 <img src='assets/img/markasread.svg' alt='Mark As Read'></img>
               </button>
