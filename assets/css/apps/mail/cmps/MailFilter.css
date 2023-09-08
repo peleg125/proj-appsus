@@ -1,9 +1,16 @@
 .filter-from {
   margin-block-end: 2em;
+  background-color: #000;
 }
 
 .filter-search {
   border-radius: 2em;
+  padding: 1em;
+  margin: 1em;
+  background-color: #474748;
+  border: none;
+  outline: none;
+  color: var(--primary-color-1);
 }
 
 label {
