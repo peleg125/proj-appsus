@@ -48,8 +48,12 @@ export function MailIndex() {
   }
 
   const handleFilterChange = (newFilterBy) => {
-    console.log('New FilterBy', newFilterBy)
-    navigate(`/mail/${newFilterBy.status}?txt=${newFilterBy.txt}`)
+    navigate(
+      `/mail/${newFilterBy.status}${
+        newFilterBy.txt ? `?txt=${newFilterBy.txt}` : ''
+      }`
+    )
+    setFilterBy(newFilterBy)
   }
 
   function handleDraftSave(draft) {
@@ -58,17 +62,52 @@ export function MailIndex() {
     // Update the query parameters to include the draft ID
     // navigate(`/mail/compose?id=${draftId}`)
   }
+  function handleStarClick(id) {
+    mailService
+      .get(id)
+      .then((mail) => {
+        const updatedMail = { ...mail }
+        updatedMail.isStarred = !updatedMail.isStarred
+        return updatedMail
+      })
+      .then((updatedMail) => {
+        return mailService.update(updatedMail).then(() => {
+          const updatedMails = mails.map((mail) =>
+            mail.id === id ? updatedMail : mail
+          )
+          console.log('from handle starred', updatedMail)
+          setMails(updatedMails)
+          console.log('mails after set mails', mails)
+        })
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
+  }
+
   function handleDeleteClick(id) {
     mailService.remove(id)
   }
   function handleMarkReadClick(id) {
-    mailService.get(id).then((mail) => {
-      const updatedMail = { ...mail, isRead: true }
-      const updatedMails = mails.map((mail) =>
-        mail.id === id ? updatedMail : mail
-      )
-      setMails(updatedMails)
-    })
+    mailService
+      .get(id)
+      .then((mail) => {
+        const updatedMail = { ...mail }
+        updatedMail.isRead = !updatedMail.isRead
+        return updatedMail
+      })
+      .then((updatedMail) => {
+        return mailService.update(updatedMail).then(() => {
+          const updatedMails = mails.map((mail) =>
+            mail.id === id ? updatedMail : mail
+          )
+          console.log('from handle read', updatedMail)
+          setMails(updatedMails)
+        })
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
   }
 
   function handleSaveEmail(mail) {
@@ -87,6 +126,7 @@ export function MailIndex() {
           mails={mails}
           onDeleteClick={handleDeleteClick}
           onMarkReadClick={handleMarkReadClick}
+          onStarClick={handleStarClick}
         />
       </div>
 

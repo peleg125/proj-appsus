@@ -216,15 +216,15 @@ const demoMails = [
 _createMails()
 
 const loggedinUser = {
-  email: 'user@appsus.com',
+  mail: 'user@appsus.com',
   fullname: 'Mahatma Appsus',
 }
 
 const criteria = {
   status: 'inbox',
   txt: '',
-  isRead: null,
-  isStared: null,
+  isRead: '',
+  isStared: '',
   labels: [],
 }
 
@@ -233,35 +233,42 @@ function query(filterBy = {}) {
     let filteredMails = mails
 
     if (filterBy.status) {
-      console.log('Filter by before status - ', filterBy)
-      console.log('fechedMails by before status - ', filteredMails)
+      if (
+        filterBy.status === 'starred' &&
+        filterBy.hasOwnProperty('isStarred') &&
+        filterBy.isStarred !== null
+      ) {
+      } else if (filterBy.status === 'starred') {
+        filteredMails = filteredMails.filter((mail) => mail.isStarred === true)
+      }
+      // console.log('Filter by before status - ', filterBy)
+      // console.log('fechedMails by before status - ', filteredMails)
       if (filterBy.status === 'inbox') {
         filteredMails = filteredMails.filter(
-          (email) => email.to === loggedinUser.email
+          (mail) => mail.to === loggedinUser.mail
         )
-        console.log('Filter by after inbox - ', filterBy)
-        console.log('fechedMails by after inbox - ', filteredMails)
+        // console.log('Filter by after inbox - ', filterBy)
+        // console.log('fechedMails by after inbox - ', filteredMails)
       } else if (filterBy.status === 'sent') {
         filteredMails = filteredMails.filter(
-          (email) => email.from === loggedinUser.email
+          (mail) => mail.from === loggedinUser.mail
         )
-        console.log('Filter by after sent - ', filterBy)
-        console.log('fechedMails by after sent - ', filteredMails)
+        // console.log('Filter by after sent - ', filterBy)
+        // console.log('fechedMails by after sent - ', filteredMails)
       } else if (filterBy.status === 'trash') {
-        filteredMails = filteredMails.filter(
-          (email) => email.removedAt !== null
-        )
-        console.log('Filter by after trash - ', filterBy)
-        console.log('fechedMails by after trash - ', filteredMails)
-      } else if (filterBy.status === 'starred') {
-        filteredMails = filteredMails.filter((email) => email.isStared === true)
-        console.log('Filter by after starred - ', filterBy)
-        console.log('fechedMails by after starred - ', filteredMails)
+        filteredMails = filteredMails.filter((mail) => mail.removedAt !== null)
+        // console.log('Filter by after trash - ', filterBy)
+        // console.log('fechedMails by after trash - ', filteredMails)
       }
     }
-
-    console.log('Filter by end - ', filterBy)
-    console.log('fechedMails by end - ', filteredMails)
+    // TODO: delete if works
+    // else if (filterBy.status === 'starred') {
+    //   filteredMails = filteredMails.filter((mail) => mail.isStarred === true)
+    // console.log('Filter by after starred - ', filterBy)
+    // console.log('fechedMails by after starred - ', filteredMails)
+    // }
+    // console.log('Filter by end - ', filterBy)
+    // console.log('fechedMails by end - ', filteredMails)
     if (filterBy.txt) {
       const txt = new RegExp(filterBy.txt, 'i')
       filteredMails = filteredMails.filter(
@@ -279,9 +286,9 @@ function query(filterBy = {}) {
       )
     }
 
-    if (filterBy.hasOwnProperty('isStared') && filterBy.isStared !== null) {
+    if (filterBy.hasOwnProperty('isStarred') && filterBy.isStarred !== null) {
       filteredMails = filteredMails.filter(
-        (mail) => mail.isStared === filterBy.isStared
+        (mail) => mail.isStarred === filterBy.isStarred
       )
     }
 

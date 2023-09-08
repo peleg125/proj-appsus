@@ -1,16 +1,14 @@
-export function MailFilter({ onFilterChange }) {
-  // filterBy - use this when you want to add to search
+import { mailService } from '../services/mail.service.js'
+
+export function MailFilter({ onFilterChange, filterBy }) {
+  // filterBy - use this when you want to add to search - add to props
   const { useState, useEffect } = React
-  const [filterByToEdit, setFilterByToEdit] = useState({
-    status: 'inbox',
-    txt: '',
-    isRead: null,
-    isStared: null,
-    labels: [],
-  })
-  // useEffect(() => {
-  //   setFilterByToEdit(filterBy)
-  // }, [filterBy])
+  const [filterByToEdit, setFilterByToEdit] = useState(
+    mailService.getDefaultMailFilter()
+  )
+  useEffect(() => {
+    setFilterByToEdit(filterBy)
+  }, [filterBy])
 
   function handleChange({ target }) {
     const field = target.name
@@ -27,71 +25,84 @@ export function MailFilter({ onFilterChange }) {
       default:
         break
     }
-
+    if (field === 'isRead') {
+      value = target.checked ? false : null
+    }
+    if (field === 'isStarred') {
+      value = target.checked ? true : null
+    }
     setFilterByToEdit((prevFilter) => ({ ...prevFilter, [field]: value }))
   }
 
   function onSubmitFilter(ev) {
     ev.preventDefault()
-    let specialStatus = null
-    const match = filterByToEdit.txt.match(/in:(\w+)/)
-    if (match) {
-      specialStatus = match[1]
-    }
+    // let specialStatus = null
+    // const match = filterByToEdit.txt.match(/in:(\w+)/)
+    // if (match) {
+    //   specialStatus = match[1]
+    // }
 
-    if (!specialStatus && filterByToEdit.txt) {
-      specialStatus = 'search'
-    }
+    // if (!specialStatus && filterByToEdit.txt) {
+    //   specialStatus = 'search'
+    // }
 
-    const textWithoutSpecialStatus = filterByToEdit.txt.replace(/in:\w+\s?/, '')
+    // const textWithoutSpecialStatus = filterByToEdit.txt.replace(/in:\w+\s?/, '')
+    // onFilterChange({
+    //   ...filterByToEdit,
+    //   status: specialStatus || filterByToEdit.status,
+    //   txt: textWithoutSpecialStatus,
+    // })
     onFilterChange({
       ...filterByToEdit,
-      status: specialStatus || filterByToEdit.status,
-      txt: textWithoutSpecialStatus,
+      status: filterByToEdit.status,
     })
   }
 
-  const { status, txt, isRead, isStared } = filterByToEdit
+  const { status, txt, isRead, isStarred } = filterByToEdit
+  console.log(`status: ${status}, 
+  txt: ${txt}, 
+  isRead: ${isRead}, 
+  isStarred:${isStarred}`)
 
   return (
     <form className='filter-from' onSubmit={onSubmitFilter}>
-      <label>
+      {/* <label>
         Status:
-        <select name='status' value={status || 'inbox'} onChange={handleChange}>
+        <select name='status' value={status || ''} onChange={handleChange}>
           <option value='inbox'>Inbox</option>
           <option value='sent'>Sent</option>
           <option value='trash'>Trash</option>
           <option value='draft'>Draft</option>
         </select>
-      </label>
+      </label> */}
 
-      <label>
+      <label title='Search'>
         Search:
         <input
           className='filter-search'
           type='text'
           name='txt'
-          value={txt}
+          value={txt || ''}
           onChange={handleChange}
         />
       </label>
 
-      <label>
-        Read:
+      <label title='Filter by read/unread'>
+        Filter by unread:
         <input
           type='checkbox'
           name='isRead'
-          checked={isRead || null}
+          checked={isRead === false}
           onChange={handleChange}
         />
       </label>
 
-      <label>
+      <label title='Show only stared'>
         Starred:
         <input
           type='checkbox'
-          name='isStared'
-          checked={isStared || null}
+          name='isStarred'
+          checked={isStarred === true}
           onChange={handleChange}
         />
       </label>
