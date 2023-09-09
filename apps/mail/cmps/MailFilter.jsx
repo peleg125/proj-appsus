@@ -6,10 +6,15 @@ export function MailFilter({ onFilterChange, filterBy }) {
     mailService.getDefaultMailFilter()
   )
   useEffect(() => {
+    console.log(
+      'from MailFilter useEffect is running due to filterBy change',
+      filterBy
+    )
     setFilterByToEdit(filterBy)
   }, [filterBy])
 
   function handleChange({ target }) {
+    console.log('from MailFilter handleChange is running')
     const field = target.name
     let value = target.value
 
@@ -34,6 +39,7 @@ export function MailFilter({ onFilterChange, filterBy }) {
   }
 
   function onSubmitFilter(ev) {
+    console.log('from MailFilter onSubmitFilter is running')
     ev.preventDefault()
     onFilterChange({
       ...filterByToEdit,
@@ -41,11 +47,12 @@ export function MailFilter({ onFilterChange, filterBy }) {
     })
   }
 
-  const { status, txt, isRead, isStarred } = filterByToEdit
+  const { txt, isRead, isStarred } = filterByToEdit
+  console.log('from mailFilter')
 
   return (
     <form className='filter-from' onSubmit={onSubmitFilter}>
-      <label title='Search'>
+      <label className='filter-label' title='Search'>
         Search:
         <input
           className='filter-search'
@@ -56,7 +63,7 @@ export function MailFilter({ onFilterChange, filterBy }) {
         />
       </label>
 
-      <label title='Filter by read/unread'>
+      <label className='filter-label' title='Filter by read/unread'>
         Filter by unread:
         <input
           type='checkbox'
@@ -66,7 +73,7 @@ export function MailFilter({ onFilterChange, filterBy }) {
         />
       </label>
 
-      <label title='Show only stared'>
+      <label className='filter-label' title='Show only stared'>
         Starred:
         <input
           type='checkbox'

@@ -13,6 +13,6 @@
   color: var(--primary-color-1);
 }
 
-label {
+.filter-label {
   margin-inline-end: 10px;
 }
