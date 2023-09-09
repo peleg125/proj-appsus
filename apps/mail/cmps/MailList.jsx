@@ -1,5 +1,5 @@
 const { Link } = ReactRouterDOM
-import { MailStar } from 'MailStar.jsx'
+import { MailStar } from './MailStar.jsx'
 
 export function MailList({
   mails,

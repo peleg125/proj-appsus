@@ -42,7 +42,6 @@ export function MailFilter({ onFilterChange, filterBy }) {
   }
 
   const { txt, isRead, isStarred } = filterByToEdit
-  console.log('from mailFilter')
 
   return (
     <form className='filter-from' onSubmit={onSubmitFilter}>
