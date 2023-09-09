@@ -1,0 +1,8 @@
+.mail-details > * {
+  margin-block-end: 1.2em;
+}
+
+.mail-details {
+  display: grid;
+  padding: 1em;
+}

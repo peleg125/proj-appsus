@@ -9,6 +9,7 @@ export function MailIndex() {
   const { useNavigate, useParams, useLocation } = ReactRouterDOM
   const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
   const [mails, setMails] = useState([])
+  const [unreadCount, setUnreadCount] = useState(0)
   const [isComposeOpen, setComposeOpen] = useState(false)
   const { status: statusParam } = useParams()
   const location = useLocation()
@@ -39,6 +40,13 @@ export function MailIndex() {
       .then((fetchedMails) => setMails(fetchedMails))
       .catch((err) => console.error(err))
   }, [filterBy])
+
+  useEffect(() => {
+    if (filterBy.status === 'inbox') {
+      const unreadMails = mails.filter((mail) => !mail.isRead).length
+      setUnreadCount(unreadMails)
+    }
+  }, [mails])
 
   function handleFilterChange(newFilterBy) {
     navigate(
@@ -118,10 +126,12 @@ export function MailIndex() {
     // mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
   }
 
+  if (!mails) return <div>Loading...</div>
+
   return (
     <div className='mail-index'>
       <div className='sidebar'>
-        <MailFolderList />
+        <MailFolderList unreadCount={unreadCount} />
       </div>
 
       <div className='mail-main-content'>

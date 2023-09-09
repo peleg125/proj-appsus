@@ -1,9 +1,8 @@
 .mail-index {
   display: grid;
-  grid-template-columns: 2.5em 3fr;
-  grid-template-areas:
-    'sidebar mail-main-content'
-    'sidebar mail-main-content';
+  grid-template-columns: 260px 3fr;
+  grid-template-areas: 'sidebar mail-main-content';
+  /* 'sidebar mail-main-content'; */
 }
 
 .sidebar {
@@ -13,6 +12,7 @@
 
 .mail-main-content {
   grid-area: mail-main-content;
+  background-color: var(--primary-color);
 }
 
 .compose-button {
@@ -30,14 +30,4 @@
   height: 400px;
   background-color: #fff;
   border: 1px solid #ccc;
-}
-.folder-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: min-content;
-  background-color: #000;
-}
-.folder-list a {
-  margin-block-start: 10px;
 }
