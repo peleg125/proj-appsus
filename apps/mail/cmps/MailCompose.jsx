@@ -1,40 +1,21 @@
 import { mailService } from '../services/mail.service.js'
 
 export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
-  const { useParams } = ReactRouterDOM
+  const { useParams, useLocation } = ReactRouterDOM
 
   const { useState, useEffect, useRef } = React
 
-  const [draft, setDraft] = useState({
-    to: '',
-    subject: '',
-    body: '',
-    from: 'user@appsus.com',
-  })
-  const searchParams = useParams()
-
-  const draftId = searchParams
+  const [draft, setDraft] = useState(mailService.getEmptyDraft())
   const draftRef = useRef(draft)
+  const intervalRef = useRef(null)
+
+  const { status } = useParams()
+  const location = useLocation()
 
   useEffect(() => {
-    draftRef.current = draft
-  }, [draft])
+    const query = new URLSearchParams(location.search)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (
-        draftRef.current.to ||
-        draftRef.current.subject ||
-        draftRef.current.body
-      ) {
-        console.log('draftRed', draftRef.current)
-        // onSaveDraft(draftRef.current)
-      }
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [])
-  useEffect(() => {
+    const draftId = query.get('draftId')
     if (draftId) {
       mailService
         .get(draftId)
@@ -43,9 +24,36 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
             setDraft(fetchedDraft)
           }
         })
-        .catch((err) => console.log('Error has accured in getting draft', err))
+        .catch((err) => console.log('Error has occurred in getting draft', err))
     }
-  }, [draftId])
+  }, [location.search])
+  useEffect(() => {
+    draftRef.current = draft
+  }, [draft])
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      const currentDraft = draftRef.current
+      if (currentDraft.to || currentDraft.subject || currentDraft.body) {
+        const { id, ...restOfDraft } = currentDraft
+
+        onSaveDraft(restOfDraft, id)
+          .then((newId) => {
+            if (newId !== id) {
+              return setDraft({
+                ...currentDraft,
+                id: newId,
+              })
+            }
+          })
+          .catch((err) => {
+            console.error('Error in onSaveDraft:', err)
+          })
+      }
+    }, 5000)
+
+    return () => clearInterval(intervalRef.current)
+  }, [])
 
   const handleChange = (ev) => {
     const { name, value } = ev.target
@@ -54,22 +62,7 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
       [name]: value,
     })
   }
-  // function handleSendClick(ev) {
-  //   ev.preventDefault()
-  //   const { target } = ev
-  //   const { to, subject, body } = target
-  //   const toValue = to.value
-  //   const subjectValue = subject.value
-  //   const bodyValue = body.value
 
-  //   const emailData = {
-  //     to: toValue,
-  //     subject: subjectValue,
-  //     body: bodyValue,
-  //     from: 'user@appsus.com',
-  //   }
-  //   onSendEmail(emailData)
-  // }
   function handleSendClick(ev) {
     ev.preventDefault()
     if (draft.id) {
@@ -77,12 +70,16 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
     } else {
       onSendEmail(draft)
     }
-
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
     onClose()
   }
 
   function handleCloseClick() {
-    clearInterval(interval)
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
     onClose()
   }
 
@@ -92,23 +89,32 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
     <div className={isOpen ? 'modal' : ''}>
       <button onClick={handleCloseClick}>Close</button>
       <form onSubmit={handleSendClick}>
+        <label className='compose-label'>To:</label>
         <input
+          className='compose-input'
           name='to'
           value={draft.to}
           onChange={handleChange}
           placeholder='To:'
         />
+
+        <label className='compose-label'>Subject:</label>
         <input
+          className='compose-input'
           name='subject'
           value={draft.subject}
           onChange={handleChange}
           placeholder='Subject:'
         />
+
+        <label className='compose-label'>Body:</label>
         <textarea
+          className='compose-input compose-body'
           name='body'
           value={draft.body}
           onChange={handleChange}
         ></textarea>
+
         <button type='submit'>Send mail</button>
       </form>
     </div>

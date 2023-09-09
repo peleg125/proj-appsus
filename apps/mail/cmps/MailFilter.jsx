@@ -1,7 +1,6 @@
 import { mailService } from '../services/mail.service.js'
 
 export function MailFilter({ onFilterChange, filterBy }) {
-  // filterBy - use this when you want to add to search - add to props
   const { useState, useEffect } = React
   const [filterByToEdit, setFilterByToEdit] = useState(
     mailService.getDefaultMailFilter()
@@ -36,22 +35,6 @@ export function MailFilter({ onFilterChange, filterBy }) {
 
   function onSubmitFilter(ev) {
     ev.preventDefault()
-    // let specialStatus = null
-    // const match = filterByToEdit.txt.match(/in:(\w+)/)
-    // if (match) {
-    //   specialStatus = match[1]
-    // }
-
-    // if (!specialStatus && filterByToEdit.txt) {
-    //   specialStatus = 'search'
-    // }
-
-    // const textWithoutSpecialStatus = filterByToEdit.txt.replace(/in:\w+\s?/, '')
-    // onFilterChange({
-    //   ...filterByToEdit,
-    //   status: specialStatus || filterByToEdit.status,
-    //   txt: textWithoutSpecialStatus,
-    // })
     onFilterChange({
       ...filterByToEdit,
       status: filterByToEdit.status,
@@ -59,24 +42,9 @@ export function MailFilter({ onFilterChange, filterBy }) {
   }
 
   const { status, txt, isRead, isStarred } = filterByToEdit
-  console.log(`from mailFilter - 
-  status: ${status}, 
-  txt: ${txt}, 
-  isRead: ${isRead}, 
-  isStarred:${isStarred}`)
 
   return (
     <form className='filter-from' onSubmit={onSubmitFilter}>
-      {/* <label>
-        Status:
-        <select name='status' value={status || ''} onChange={handleChange}>
-          <option value='inbox'>Inbox</option>
-          <option value='sent'>Sent</option>
-          <option value='trash'>Trash</option>
-          <option value='draft'>Draft</option>
-        </select>
-      </label> */}
-
       <label title='Search'>
         Search:
         <input

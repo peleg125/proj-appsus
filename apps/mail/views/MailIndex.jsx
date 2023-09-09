@@ -60,17 +60,26 @@ export function MailIndex() {
   }
 
   function handleDraftSave(draft, id = null) {
-    mailService
+    console.log(
+      `Attempting to save draft. Draft: ${JSON.stringify(draft)}, ID: ${id}`
+    )
+    return mailService
       .addOrUpdateDraft(draft, id)
-      .then((draftId) => {
-        if (draftId) {
-          navigate(`/mail/compose?draftId=${draftId}`)
+      .then((modDraft) => {
+        console.log('Successfully saved draft. Returned draft ID:', modDraft.id)
+        if (modDraft) {
+          navigate(
+            `/mail/${filterBy.status}/?compose=true&draftId=${modDraft.id}`
+          )
         }
+        return modDraft.id
       })
       .catch((err) => {
         console.error('Error saving draft:', err)
+        throw err
       })
   }
+
   function handleMarkReadClick(id) {
     handleEntityUpdate(id, (mail) => {
       mail.isRead = !mail.isRead
@@ -93,21 +102,20 @@ export function MailIndex() {
     })
   }
 
-  function handleDeleteClick(id) {
-    mailService.remove(id)
+  function handleDeleteClick(mailId) {
+    mailService
+      .remove(mailId)
+      .then(() =>
+        setMails((prevMails) => prevMails.filter((mail) => mail.id !== mailId))
+      )
+      .catch((err) => console.log('err:', err))
   }
 
   function handleSaveEmail(mail) {
-    mail.sentAt = new Date().toISOString()
-
-    mailService
-      .update(mail)
-      .then(() => {
-        console.log('Email sent successfully')
-      })
-      .catch((err) => {
-        console.error('Error while sending email:', err)
-      })
+    handleEntityUpdate(mail.id, (entity) => {
+      entity.sentAt = new Date().toISOString()
+      return entity
+    })
   }
 
   function handleEntityUpdate(id, updateFunction) {
@@ -151,14 +159,24 @@ export function MailIndex() {
         </div>
 
         <div className='compose-button'>
-          <button onClick={() => setComposeOpen(true)}>Compose</button>
+          <button
+            onClick={() => {
+              navigate(`/mail/${filterBy.status}/?compose=true`)
+              setComposeOpen(true)
+            }}
+          >
+            Compose
+          </button>
         </div>
 
         {isComposeOpen && (
           <div className='compose-modal'>
             <MailCompose
               isOpen={isComposeOpen}
-              onClose={() => setComposeOpen(false)}
+              onClose={() => {
+                navigate(`/mail/${filterBy.status}`)
+                setComposeOpen(false)
+              }}
               onSaveDraft={handleDraftSave}
               onSendEmail={handleSaveEmail}
             />

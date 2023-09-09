@@ -8,7 +8,6 @@ export function MailList({
   onStarClick,
   onMailClick,
 }) {
-  console.log('from mailList', mails)
   return (
     <div className='mail-list'>
       <div className='mail-list-body'>

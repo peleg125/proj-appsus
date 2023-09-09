@@ -9,6 +9,8 @@ export const mailService = {
   remove,
   getDefaultMailFilter,
   addOrUpdateDraft,
+  getEmptyDraft,
+  updateDraft,
 }
 const MAILS_KEY = 'emailsDB'
 const demoMails = [
@@ -260,7 +262,6 @@ function query(filterBy = {}) {
             filterBy.hasOwnProperty('isStarred') &&
             filterBy.isStarred !== null
           ) {
-            console.log('true from starred query')
           } else {
             filteredMails = filteredMails.filter(
               (mail) => mail.isStarred === true
@@ -274,7 +275,10 @@ function query(filterBy = {}) {
           break
         case 'sent':
           filteredMails = filteredMails.filter(
-            (mail) => mail.from === loggedinUser.mail && mail.removedAt === null
+            (mail) =>
+              mail.from === loggedinUser.mail &&
+              mail.removedAt === null &&
+              mail.sentAt !== null
           )
           break
         case 'trash':
@@ -347,7 +351,6 @@ function add(mail) {
     sentAt: Date.now(),
     isRead: true,
   }
-  console.log('from tempMail', tempMail)
   return storageService.post(MAILS_KEY, tempMail)
 }
 
@@ -368,18 +371,43 @@ function getDefaultMailFilter() {
     labels: [],
   }
 }
+
 function addOrUpdateDraft(mail, id = null) {
   if (id) {
-    return update(mail)
+    return updateDraft(mail, id)
   } else {
-    const draftMail = {
-      ..._createMail(),
-      ...mail,
-      from: loggedinUser.mail,
-      sentAt: null,
-      isRead: true,
-    }
-    return storageService.post(MAILS_KEY, draftMail)
+    return addDraft(mail)
+  }
+}
+function addDraft(draft) {
+  const draftMail = {
+    ..._createMail(),
+    ...draft,
+    from: loggedinUser.mail,
+    sentAt: null,
+    isRead: true,
+  }
+  return storageService.post(MAILS_KEY, draftMail).catch((err) => {
+    throw new Error('Error adding draft:', err)
+  })
+}
+
+function updateDraft(mail, id) {
+  const updatedMail = { ...mail, id }
+  return update(updatedMail)
+}
+
+function getEmptyDraft() {
+  return {
+    id: '',
+    subject: '',
+    body: '',
+    isRead: null,
+    sentAt: null,
+    isStarred: null,
+    removedAt: null,
+    from: 'user@appsus.com',
+    to: '',
   }
 }
 
