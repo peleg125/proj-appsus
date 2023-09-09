@@ -29,8 +29,6 @@ export function App() {
           <Route path='/note' element={<NoteIndex />}>
             <Route path='/note/:noteId' element={<NoteModal />} />
           </Route>
-
-          {/* <Route path='/book' element={<BookIndex />} /> */}
         </Routes>
       </section>
     </Router>
