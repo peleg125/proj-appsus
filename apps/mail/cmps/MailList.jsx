@@ -1,5 +1,5 @@
 const { Link } = ReactRouterDOM
-import { MailStar } from 'mailStar.jsx'
+import { MailStar } from 'MailStar.jsx'
 
 export function MailList({
   mails,
@@ -22,18 +22,6 @@ export function MailList({
               onMailClick(mail.id)
             }}
           >
-            {/* <div>
-              <input type='checkbox' />
-            </div>
-            <button
-              className='star-btn'
-              onClick={(event) => {
-                event.stopPropagation()
-                onStarClick(mail.id)
-              }}
-            >
-              <img src='assets/img/star.svg'></img>
-            </button> */}
             <div>
               <input type='checkbox' />
             </div>

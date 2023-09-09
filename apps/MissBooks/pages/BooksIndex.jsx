@@ -1,8 +1,8 @@
-import { BookFilter } from "../cmps/BookFilter.jsx"
-import { bookService } from "../services/book.service.js"
-import { BookList } from "../cmps/BooksList.jsx"
-import { BookDetails } from "./BookDetails.jsx"
-import { BookPreview } from "../cmps/BooksPreview.jsx"
+import { BookFilter } from '../cmps/BookFilter.jsx'
+import { bookService } from '../services/book.service.js'
+import { BookList } from '../cmps/BooksList.jsx'
+import { BookDetails } from './BookDetails.jsx'
+import { BookPreview } from '../cmps/BooksPreview.jsx'
 const { useState, useEffect } = React
 const { Link } = ReactRouterDOM
 
@@ -24,8 +24,8 @@ export function BooksIndex() {
         showSuccessMsg(`Book Removed! ${bookId}`)
       })
       .catch((err) => {
-        console.log("err:", err)
-        showErrorMsg("Problem Removing " + bookId)
+        console.log('err:', err)
+        showErrorMsg('Problem Removing ' + bookId)
       })
   }
 
@@ -34,7 +34,6 @@ export function BooksIndex() {
   }
 
   function onSelectBookId(bookId) {
-    console.log(bookId)
     setSelectedBookId(bookId)
   }
 
@@ -52,7 +51,11 @@ export function BooksIndex() {
             </Link>
           </div>
           <BookFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy} />
-          <BookList books={books} onSelectBookId={onSelectBookId} onRemoveBook={onRemoveBook} />
+          <BookList
+            books={books}
+            onSelectBookId={onSelectBookId}
+            onRemoveBook={onRemoveBook}
+          />
         </React.Fragment>
       )}
       {/* {selectedBookId && <BookDetails onBack={() => onSelectBookId(null)} bookId={selectedBookId} />} */}

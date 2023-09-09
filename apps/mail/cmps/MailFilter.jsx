@@ -6,15 +6,10 @@ export function MailFilter({ onFilterChange, filterBy }) {
     mailService.getDefaultMailFilter()
   )
   useEffect(() => {
-    console.log(
-      'from MailFilter useEffect is running due to filterBy change',
-      filterBy
-    )
     setFilterByToEdit(filterBy)
   }, [filterBy])
 
   function handleChange({ target }) {
-    console.log('from MailFilter handleChange is running')
     const field = target.name
     let value = target.value
 
@@ -39,7 +34,6 @@ export function MailFilter({ onFilterChange, filterBy }) {
   }
 
   function onSubmitFilter(ev) {
-    console.log('from MailFilter onSubmitFilter is running')
     ev.preventDefault()
     onFilterChange({
       ...filterByToEdit,
