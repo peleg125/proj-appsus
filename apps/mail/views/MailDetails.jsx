@@ -28,18 +28,36 @@ export function MailDetails() {
   if (!mail) return <div>Loading...</div>
 
   return (
-    <section className='mail-details'>
-      <h1>Subject: {mail.subject}</h1>
-      <h4>{`From <${mail.from}>`}</h4>
-      <h4>{`To <${mail.to}>`}</h4>
-      <p>{mail.body}</p>
+    <section className='mail-container main-layout'>
+      <button className='details-back-btn' onClick={() => onBack()}>
+        Back
+      </button>
+      <article className='mail-details'>
+        <h1 className='place-self-center'>{mail.subject}</h1>
 
-      <button onClick={onBack}>Back</button>
+        <div className='top'>
+          <div className='flex space-between'>
+            <h4>{`From <${mail.from}>`}</h4>
+            <span>{new Date(mail.sentAt).toLocaleString()}</span>
+          </div>
+          <h4>{`To <${mail.to}>`}</h4>
+        </div>
+        <div
+          style={{
+            borderTop: '2px solid #b7b7b7 ',
+            marginLeft: 20,
+            marginRight: 20,
+          }}
+        ></div>
+        <div className='mail-body'>
+          <p>{mail.body}</p>
+        </div>
 
-      <section className='links-next-prev flex flex-column'>
-        <Link to={`/mail/${mail.nextMailId}`}>Next Mail</Link>
-        <Link to={`/mail/${mail.prevMailId}`}>Previous Mail</Link>
-      </section>
+        <section className='links-next-prev flex flex-column'>
+          <Link to={`/mail/${mail.nextMailId}`}>Next Mail</Link>
+          <Link to={`/mail/${mail.prevMailId}`}>Previous Mail</Link>
+        </section>
+      </article>
     </section>
   )
 }

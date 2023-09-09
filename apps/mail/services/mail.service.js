@@ -8,7 +8,9 @@ export const mailService = {
   update,
   remove,
   getDefaultMailFilter,
-  addDraftMail,
+  addOrUpdateDraft,
+  getEmptyDraft,
+  updateDraft,
 }
 const MAILS_KEY = 'emailsDB'
 const demoMails = [
@@ -18,6 +20,7 @@ const demoMails = [
     body: 'Would love to catch up sometimes',
     isRead: false,
     sentAt: 1551133930594,
+    isStarred: false,
     removedAt: null,
     from: 'momo@momo.com',
     to: 'user@appsus.com',
@@ -28,6 +31,7 @@ const demoMails = [
     body: "Don't forget we have an important meeting scheduled for Monday.",
     isRead: true,
     sentAt: 1551231930594,
+    isStarred: false,
     removedAt: null,
     from: 'boss@appsus.com',
     to: 'user@appsus.com',
@@ -38,6 +42,7 @@ const demoMails = [
     body: "Here is our weekly newsletter. Don't miss our top stories!",
     isRead: false,
     sentAt: 1551231930595,
+    isStarred: false,
     removedAt: null,
     from: 'newsletter@appsus.com',
     to: 'user@appsus.com',
@@ -48,6 +53,7 @@ const demoMails = [
     body: 'Your invoice is due in 5 days. Please make a payment.',
     isRead: true,
     sentAt: 1551231930596,
+    isStarred: true,
     removedAt: null,
     from: 'billing@appsus.com',
     to: 'user@appsus.com',
@@ -58,6 +64,7 @@ const demoMails = [
     body: 'ממש חייב להפסיק לענות, זה נוראי',
     isRead: true,
     sentAt: 1551231930596,
+    isStarred: false,
     removedAt: null,
     from: 'user@appsus.com',
     to: 'mom@gmail.com',
@@ -68,6 +75,7 @@ const demoMails = [
     body: 'You are cordially invited to our annual event. RSVP by the 5th.',
     isRead: true,
     sentAt: 1650987200000,
+    isStarred: false,
     removedAt: 1650987200000,
     from: 'events@appsus.com',
     to: 'user@appsus.com',
@@ -78,6 +86,7 @@ const demoMails = [
     body: 'Please take a moment to complete our customer satisfaction survey.',
     isRead: false,
     sentAt: 1651129200000,
+    isStarred: false,
     removedAt: 1650987204315,
     from: 'feedback@appsus.com',
     to: 'user@appsus.com',
@@ -88,6 +97,7 @@ const demoMails = [
     body: 'Our latest collection is now available with a 30% discount. Use code SPECIAL30.',
     isRead: false,
     sentAt: 1651365600000,
+    isStarred: false,
     removedAt: null,
     from: 'marketing@appsus.com',
     to: 'user@appsus.com',
@@ -99,6 +109,7 @@ const demoMails = [
     isRead: false,
     sentAt: null,
     removedAt: null,
+    isStarred: false,
     from: 'user@appsus.com',
     to: 'recipient@appsus.com',
   },
@@ -108,6 +119,7 @@ const demoMails = [
     body: 'Your subscription will end in 3 days. Please renew to continue using our services. please consider subscribing to my YT channel',
     isRead: true,
     sentAt: 1651920000000,
+    isStarred: false,
     removedAt: null,
     from: 'billing@appsus.com',
     to: 'user@appsus.com',
@@ -117,8 +129,9 @@ const demoMails = [
     subject: 'Re: Dinner Plans for Friday Night?',
     body: "Hey there! How about trying that new Italian place for dinner on Friday? Let me know if you're in!",
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1664531200000,
+    isStarred: false,
     from: 'friend@example.com',
     to: 'user@appsus.com',
   },
@@ -127,8 +140,9 @@ const demoMails = [
     subject: 'Urgent: Project Deadline Approaching',
     body: "We're getting closer to the project deadline. Your input is crucial! Please review and share your thoughts ASAP.",
     isRead: false,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1659724800000,
+    isStarred: false,
     from: 'boss@company.com',
     to: 'user@appsus.com',
   },
@@ -139,6 +153,7 @@ const demoMails = [
     isRead: true,
     isRemoved: true,
     sentAt: 1665129600000,
+    isStarred: false,
     from: 'traveldeals@exploreworld.com',
     to: 'user@appsus.com',
   },
@@ -147,8 +162,9 @@ const demoMails = [
     subject: 'Congratulations on Your Promotion!',
     body: "You've earned it! Celebrate your success and take on this new role with confidence.",
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1662844800000,
+    isStarred: true,
     from: 'hr@company.com',
     to: 'user@appsus.com',
   },
@@ -157,8 +173,9 @@ const demoMails = [
     subject: 'Weekly Newsletter: Tech Trends & Innovations',
     body: 'Stay ahead in the tech world with our latest newsletter. Explore emerging trends and groundbreaking innovations.',
     isRead: false,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1663473600000,
+    isStarred: false,
     from: 'technews@innovate.com',
     to: 'user@appsus.com',
   },
@@ -167,8 +184,9 @@ const demoMails = [
     subject: 'Payment Received - Thank You!',
     body: 'Your recent payment has been successfully received. We appreciate your business and look forward to serving you again.',
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1658726400000,
+    isStarred: false,
     from: 'billing@businessco.com',
     to: 'user@appsus.com',
   },
@@ -179,6 +197,7 @@ const demoMails = [
     isRead: false,
     isRemoved: true,
     sentAt: 1659451200000,
+    isStarred: false,
     from: 'charityevents@helpinghands.org',
     to: 'user@appsus.com',
   },
@@ -187,8 +206,9 @@ const demoMails = [
     subject: 'Important Tax Documents Attached',
     body: 'Your tax documents for the year are attached. Please review them and file your taxes accordingly.',
     isRead: false,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1657478400000,
+    isStarred: false,
     from: 'finance@taxfirm.com',
     to: 'user@appsus.com',
   },
@@ -197,8 +217,9 @@ const demoMails = [
     subject: 'Reminder: Parent-Teacher Conference Tomorrow',
     body: "Don't forget about the parent-teacher conference scheduled for tomorrow. Your child's progress is our priority.",
     isRead: true,
-    isRemoved: false,
+    isRemoved: null,
     sentAt: 1664217600000,
+    isStarred: false,
     from: 'schooladmin@example.com',
     to: 'user@appsus.com',
   },
@@ -207,8 +228,9 @@ const demoMails = [
     subject: 'Exclusive Discount for You!',
     body: "You're one of our valued customers. Enjoy an exclusive 20% discount on your next purchase as a token of our appreciation.",
     isRead: true,
-    isRemoved: true,
+    isRemoved: 1662403200000,
     sentAt: 1662403200000,
+    isStarred: false,
     from: 'customerloyalty@example.com',
     to: 'user@appsus.com',
   },
@@ -229,72 +251,71 @@ const criteria = {
   labels: [],
 }
 
+function filterByStatus(mails, status, user) {
+  switch (status) {
+    case 'starred':
+      return mails.filter((mail) => mail.isStarred === true)
+    case 'inbox':
+      return mails.filter(
+        (mail) => mail.to === user.mail && mail.removedAt === null
+      )
+    case 'sent':
+      return mails.filter(
+        (mail) =>
+          mail.from === user.mail &&
+          mail.removedAt === null &&
+          mail.sentAt !== null
+      )
+    case 'trash':
+      return mails.filter((mail) => mail.removedAt !== null)
+    case 'draft':
+      return mails.filter(
+        (mail) => mail.sentAt === null && mail.from === user.mail
+      )
+    default:
+      return mails
+  }
+}
+
+function filterByText(mails, txt) {
+  const regex = new RegExp(txt, 'i')
+  return mails.filter(
+    (mail) =>
+      regex.test(mail.subject) || regex.test(mail.body) || regex.test(mail.from)
+  )
+}
+
+function filterByRead(mails, isRead) {
+  return mails.filter((mail) => mail.isRead === isRead)
+}
+
+function filterByStarred(mails, isStarred) {
+  return mails.filter((mail) => mail.isStarred === isStarred)
+}
+
 function query(filterBy = {}) {
   return storageService.query(MAILS_KEY).then((mails) => {
     let filteredMails = mails
 
     if (filterBy.status) {
-      if (
-        filterBy.status === 'starred' &&
-        filterBy.hasOwnProperty('isStarred') &&
-        filterBy.isStarred !== null
-      ) {
-      } else if (filterBy.status === 'starred') {
-        filteredMails = filteredMails.filter((mail) => mail.isStarred === true)
-      }
-      // console.log('Filter by before status - ', filterBy)
-      // console.log('fechedMails by before status - ', filteredMails)
-      if (filterBy.status === 'inbox') {
-        filteredMails = filteredMails.filter(
-          (mail) => mail.to === loggedinUser.mail
-        )
-        // console.log('Filter by after inbox - ', filterBy)
-        // console.log('fechedMails by after inbox - ', filteredMails)
-      } else if (filterBy.status === 'sent') {
-        filteredMails = filteredMails.filter(
-          (mail) => mail.from === loggedinUser.mail
-        )
-        // console.log('Filter by after sent - ', filterBy)
-        // console.log('fechedMails by after sent - ', filteredMails)
-      } else if (filterBy.status === 'trash') {
-        filteredMails = filteredMails.filter((mail) => mail.removedAt !== null)
-        // console.log('Filter by after trash - ', filterBy)
-        // console.log('fechedMails by after trash - ', filteredMails)
-      }
-    }
-    if (filterBy.txt) {
-      const txt = new RegExp(filterBy.txt, 'i')
-      filteredMails = filteredMails.filter(
-        (mail) =>
-          txt.test(mail.subject) || txt.test(mail.body) || txt.test(mail.from)
+      filteredMails = filterByStatus(
+        filteredMails,
+        filterBy.status,
+        loggedinUser
       )
+    }
 
-      console.log('from regex', filteredMails)
-      console.log('filterby', filterBy)
+    if (filterBy.txt) {
+      filteredMails = filterByText(filteredMails, filterBy.txt)
     }
 
     if (filterBy.hasOwnProperty('isRead') && filterBy.isRead !== null) {
-      filteredMails = filteredMails.filter(
-        (mail) => mail.isRead === filterBy.isRead
-      )
+      filteredMails = filterByRead(filteredMails, filterBy.isRead)
     }
 
     if (filterBy.hasOwnProperty('isStarred') && filterBy.isStarred !== null) {
-      filteredMails = filteredMails.filter(
-        (mail) => mail.isStarred === filterBy.isStarred
-      )
+      filteredMails = filterByStarred(filteredMails, filterBy.isStarred)
     }
-
-    if (filterBy.labels && filterBy.labels.length > 0) {
-      filteredMails = filteredMails.filter((mail) =>
-        filterBy.labels.some((label) => mail.labels.includes(label))
-      )
-
-      console.log('filterby', filterBy)
-      console.log('from labled', filteredMails)
-    }
-    console.log('from end', filteredMails)
-    console.log('filterby', filterBy)
 
     return filteredMails
   })
@@ -311,7 +332,14 @@ function get(mailId) {
 }
 
 function add(mail) {
-  return storageService.post(MAILS_KEY, mail)
+  const mailTemplate = _createMail()
+  const tempMail = {
+    ...mailTemplate,
+    ...mail,
+    sentAt: Date.now(),
+    isRead: true,
+  }
+  return storageService.post(MAILS_KEY, tempMail)
 }
 
 function update(mail) {
@@ -331,21 +359,49 @@ function getDefaultMailFilter() {
     labels: [],
   }
 }
-function addDraftMail(mail) {
-  const mailTemplate = _createMail()
+
+function addOrUpdateDraft(mail, id = null) {
+  if (id) {
+    return updateDraft(mail, id)
+  } else {
+    return addDraft(mail)
+  }
+}
+function addDraft(draft) {
   const draftMail = {
-    ...mailTemplate,
-    ...mail,
-    sentAt: Date.now(),
+    ..._createMail(),
+    ...draft,
+    from: loggedinUser.mail,
+    sentAt: null,
     isRead: true,
   }
-  console.log('from draftMail', draftMail)
-  return storageService.post(MAILS_KEY, draftMail)
+  return storageService.post(MAILS_KEY, draftMail).catch((err) => {
+    throw new Error('Error adding draft:', err)
+  })
 }
 
-function _createMail() {
+function updateDraft(mail, id) {
+  const updatedMail = { ...mail, id }
+  return update(updatedMail)
+}
+
+function getEmptyDraft() {
   return {
     id: '',
+    subject: '',
+    body: '',
+    isRead: null,
+    sentAt: null,
+    isStarred: null,
+    removedAt: null,
+    from: 'user@appsus.com',
+    to: '',
+  }
+}
+
+function _createMail(id = null) {
+  return {
+    id: id || utilService.makeId(),
     subject: '',
     body: '',
     isRead: false,

@@ -2,25 +2,49 @@
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 300px;
+  width: 600px;
   height: 400px;
-  background-color: orange;
+  background-color: #f2f2f2;
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0px 0px 10px #aaa;
   z-index: 1000;
+  overflow: auto;
 }
 
 .compose-button {
   position: fixed;
   bottom: 20px;
-  right: 20px;
-  background-color: blue;
-  color: black;
+  left: 20px;
+  background-color: #474748;
+  color: var(--primary-color-1);
   padding: 10px 20px;
   border: none;
-  border-radius: 50%;
+  border-radius: 2em;
   cursor: pointer;
+  padding: 1em;
+  margin: 1em;
+  outline: none;
   z-index: 999;
+}
+
+.compose-label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: inline-block;
+  width: 60px;
+  color: var(--primary-color-1);
+}
+
+.compose-input {
+  width: 90%;
+  padding: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.compose-body {
+  height: 150px;
 }

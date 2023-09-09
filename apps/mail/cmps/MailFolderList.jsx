@@ -1,31 +1,36 @@
-export function MailFolderList({ onFolderChange }) {
-  const { Link } = ReactRouterDOM
+export function MailFolderList({ unreadCount }) {
+  const { Link, useLocation } = ReactRouterDOM
 
-  function handleClick(folder) {
-    onFolderChange(folder)
+  const location = useLocation()
+  const currentPath = location.pathname
+
+  function isActive(path) {
+    return currentPath.includes(path) ? 'active-folder' : ''
   }
 
   return (
     <div className='folder-list'>
-      <Link title='Inbox' to='/mail/inbox' onClick={() => handleClick('inbox')}>
-        Inbox
-      </Link>
-      <Link title='Sent' to='/mail/sent' onClick={() => handleClick('sent')}>
-        Sent
-      </Link>
-      <Link
-        title='Starred'
-        to='/mail/starred'
-        onClick={() => handleClick('starred')}
-      >
-        Starred
-      </Link>
-      <Link title='Trash' to='/mail/trash' onClick={() => handleClick('trash')}>
-        Trash
-      </Link>
-      <Link title='Draft' to='/mail/draft' onClick={() => handleClick('draft')}>
-        Drafts
-      </Link>
+      <div title='Inbox' className={`folder-div ${isActive('/inbox')}`}>
+        <Link className='space-between' to='/mail/inbox'>
+          Inbox {unreadCount > 0 && <span>({unreadCount})</span>}
+        </Link>
+      </div>
+
+      <div title='Sent' className={`folder-div ${isActive('/sent')}`}>
+        <Link to='/mail/sent'>Sent</Link>
+      </div>
+
+      <div title='Starred' className={`folder-div ${isActive('/starred')}`}>
+        <Link to='/mail/starred'>Starred</Link>
+      </div>
+
+      <div title='Trash' className={`folder-div ${isActive('/trash')}`}>
+        <Link to='/mail/trash'>Trash</Link>
+      </div>
+
+      <div title='Draft' className={`folder-div ${isActive('/draft')}`}>
+        <Link to='/mail/draft'>Drafts</Link>
+      </div>
     </div>
   )
 }

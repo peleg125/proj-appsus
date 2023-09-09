@@ -9,6 +9,7 @@ export function MailIndex() {
   const { useNavigate, useParams, useLocation } = ReactRouterDOM
   const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
   const [mails, setMails] = useState([])
+  const [unreadCount, setUnreadCount] = useState(0)
   const [isComposeOpen, setComposeOpen] = useState(false)
   const { status: statusParam } = useParams()
   const location = useLocation()
@@ -18,14 +19,14 @@ export function MailIndex() {
     const queryParams = new URLSearchParams(location.search)
 
     const txt = queryParams.get('txt')
-    const specialStatus = queryParams.get('in')
+    const compose = queryParams.get('compose') === 'true'
 
-    const status = specialStatus ? specialStatus : statusParam
+    setComposeOpen(compose)
+    const status = statusParam
 
     setFilterBy((prevFilter) => {
       const newFilter = { ...prevFilter }
-
-      newFilter.status = status ? status : newFilter.status
+      newFilter.status = status
       newFilter.txt = txt
       return newFilter
     })
@@ -34,118 +35,149 @@ export function MailIndex() {
   useEffect(() => {
     mailService
       .query(filterBy)
-      .then((fetchedMails) => {
-        setMails(fetchedMails)
-      })
+      .then((fetchedMails) => setMails(fetchedMails))
       .catch((err) => console.error(err))
   }, [filterBy])
 
-  function handleFolderChange(folder) {
-    setFilterBy((prevFilter) => {
-      const newFilter = { ...prevFilter, txt: `in:${folder}` }
-      return newFilter
-    })
-  }
+  useEffect(() => {
+    if (filterBy.status === 'inbox') {
+      const unreadMails = mails.filter((mail) => !mail.isRead).length
+      setUnreadCount(unreadMails)
+    }
+  }, [mails])
 
-  const handleFilterChange = (newFilterBy) => {
+  function handleFilterChange(newFilterBy) {
     navigate(
       `/mail/${newFilterBy.status}${
         newFilterBy.txt ? `?txt=${newFilterBy.txt}` : ''
       }`
     )
-    setFilterBy(newFilterBy)
+    setFilterBy((prevFilter) => {
+      const newFilter = { ...prevFilter, ...newFilterBy }
+      return newFilter
+    })
   }
 
-  function handleDraftSave(draft) {
-    // Save the draft and get its ID
-    // const draftId = // save the draft and get its ID (e.g., from an API)
-    // Update the query parameters to include the draft ID
-    // navigate(`/mail/compose?id=${draftId}`)
+  function handleDraftSave(draft, id = null) {
+    return mailService
+      .addOrUpdateDraft(draft, id)
+      .then((modDraft) => {
+        if (modDraft) {
+          navigate(
+            `/mail/${filterBy.status}/?compose=true&draftId=${modDraft.id}`
+          )
+        }
+        return modDraft.id
+      })
+      .catch((err) => {
+        console.error('Error saving draft:', err)
+        throw err
+      })
+  }
+
+  function handleMarkReadClick(id) {
+    handleEntityUpdate(id, (mail) => {
+      mail.isRead = !mail.isRead
+      return mail
+    })
   }
   function handleStarClick(id) {
-    mailService
-      .get(id)
-      .then((mail) => {
-        const updatedMail = { ...mail }
-        updatedMail.isStarred = !updatedMail.isStarred
-        return updatedMail
-      })
-      .then((updatedMail) => {
-        return mailService.update(updatedMail).then(() => {
-          const updatedMails = mails.map((mail) =>
-            mail.id === id ? updatedMail : mail
-          )
-          console.log('from handle starred', updatedMail)
-          setMails(updatedMails)
-          console.log('mails after set mails', mails)
-        })
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
+    handleEntityUpdate(id, (mail) => {
+      mail.isStarred = !mail.isStarred
+      return mail
+    })
   }
 
-  function handleDeleteClick(id) {
-    mailService.remove(id)
+  function handleClick(id) {
+    handleEntityUpdate(id, (mail) => {
+      if (!mail.isRead) {
+        mail.isRead = true
+      }
+      return mail
+    })
   }
-  function handleMarkReadClick(id) {
+
+  function handleDeleteClick(mailId) {
     mailService
-      .get(id)
-      .then((mail) => {
-        const updatedMail = { ...mail }
-        updatedMail.isRead = !updatedMail.isRead
-        return updatedMail
-      })
-      .then((updatedMail) => {
-        return mailService.update(updatedMail).then(() => {
-          const updatedMails = mails.map((mail) =>
-            mail.id === id ? updatedMail : mail
-          )
-          console.log('from handle read', updatedMail)
-          setMails(updatedMails)
-        })
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
+      .remove(mailId)
+      .then(() =>
+        setMails((prevMails) => prevMails.filter((mail) => mail.id !== mailId))
+      )
+      .catch((err) => console.log('err:', err))
   }
 
   function handleSaveEmail(mail) {
-    mailService.addDraftMail(mail).then(console.log)
-
-    // mailService.add(mail).then((data) => console.log('from onSaveEmail', data))
+    handleEntityUpdate(mail.id, (entity) => {
+      entity.sentAt = new Date().toISOString()
+      return entity
+    })
   }
 
+  function handleEntityUpdate(id, updateFunction) {
+    mailService
+      .get(id)
+      .then((entity) => {
+        const updatedEntity = { ...entity }
+        return updateFunction(updatedEntity)
+      })
+      .then((updatedEntity) => {
+        return mailService.update(updatedEntity).then(() => {
+          const updatedMails = mails.map((mail) =>
+            mail.id === id ? updatedEntity : mail
+          )
+          setMails(updatedMails)
+        })
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
+  }
+
+  if (!mails) return <div>Loading...</div>
+
   return (
-    <div className='mail-index'>
-      <div className='sidebar'>
-        <MailFolderList onFolderChange={handleFolderChange} />
-      </div>
+    <main className='main-container'>
+      <div className='mail-index'>
+        <div className='sidebar'>
+          <MailFolderList unreadCount={unreadCount} />
+        </div>
 
-      <div className='mail-main-content'>
-        <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
-        <MailList
-          mails={mails}
-          onDeleteClick={handleDeleteClick}
-          onMarkReadClick={handleMarkReadClick}
-          onStarClick={handleStarClick}
-        />
-      </div>
-
-      <div className='compose-button'>
-        <button onClick={() => setComposeOpen(true)}>Compose</button>
-      </div>
-
-      {isComposeOpen && (
-        <div className='compose-modal'>
-          <MailCompose
-            isOpen={isComposeOpen}
-            onClose={() => setComposeOpen(false)}
-            onSaveDraft={handleDraftSave}
-            onSendEmail={handleSaveEmail}
+        <div className='mail-main-content'>
+          <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
+          <MailList
+            mails={mails}
+            onDeleteClick={handleDeleteClick}
+            onMarkReadClick={handleMarkReadClick}
+            onStarClick={handleStarClick}
+            onMailClick={handleClick}
           />
         </div>
-      )}
-    </div>
+
+        <div className='compose-button'>
+          <button
+            onClick={() => {
+              navigate(`/mail/${filterBy.status}/?compose=true`)
+              setComposeOpen(true)
+            }}
+          >
+            Compose
+          </button>
+        </div>
+
+        {isComposeOpen && (
+          <div className='compose-modal'>
+            <MailCompose
+              isOpen={isComposeOpen}
+              onClose={() => {
+                navigate(`/mail/${filterBy.status}`)
+                setComposeOpen(false)
+              }}
+              onSaveDraft={handleDraftSave}
+              onSendEmail={handleSaveEmail}
+            />
+          </div>
+        )}
+      </div>
+    </main>
   )
 }
