@@ -1,4 +1,8 @@
+import { mailService } from '../services/mail.service.js'
+
 export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
+  const { useParams } = ReactRouterDOM
+
   const { useState, useEffect, useRef } = React
 
   const [draft, setDraft] = useState({
@@ -7,7 +11,9 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
     body: '',
     from: 'user@appsus.com',
   })
+  const searchParams = useParams()
 
+  const draftId = searchParams
   const draftRef = useRef(draft)
 
   useEffect(() => {
@@ -21,12 +27,25 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
         draftRef.current.subject ||
         draftRef.current.body
       ) {
-        onSaveDraft(draftRef.current)
+        console.log('draftRed', draftRef.current)
+        // onSaveDraft(draftRef.current)
       }
     }, 5000)
 
     return () => clearInterval(interval)
   }, [])
+  useEffect(() => {
+    if (draftId) {
+      mailService
+        .get(draftId)
+        .then((fetchedDraft) => {
+          if (fetchedDraft) {
+            setDraft(fetchedDraft)
+          }
+        })
+        .catch((err) => console.log('Error has accured in getting draft', err))
+    }
+  }, [draftId])
 
   const handleChange = (ev) => {
     const { name, value } = ev.target
@@ -35,25 +54,30 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
       [name]: value,
     })
   }
-  function handleSendClick(ev) {
-    ev.preventDefault()
-    const { target } = ev
-    const { to, subject, body } = target
-    const toValue = to.value
-    const subjectValue = subject.value
-    const bodyValue = body.value
+  // function handleSendClick(ev) {
+  //   ev.preventDefault()
+  //   const { target } = ev
+  //   const { to, subject, body } = target
+  //   const toValue = to.value
+  //   const subjectValue = subject.value
+  //   const bodyValue = body.value
 
-    const emailData = {
-      to: toValue,
-      subject: subjectValue,
-      body: bodyValue,
-      from: 'user@appsus.com',
-    }
-    onSendEmail(emailData)
-  }
+  //   const emailData = {
+  //     to: toValue,
+  //     subject: subjectValue,
+  //     body: bodyValue,
+  //     from: 'user@appsus.com',
+  //   }
+  //   onSendEmail(emailData)
+  // }
   function handleSendClick(ev) {
     ev.preventDefault()
-    onSendEmail(draft)
+    if (draft.id) {
+      onSaveDraft(draft, draft.id)
+    } else {
+      onSendEmail(draft)
+    }
+
     onClose()
   }
 

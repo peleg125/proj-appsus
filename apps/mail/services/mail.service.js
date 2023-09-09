@@ -282,8 +282,12 @@ function query(filterBy = {}) {
             (mail) => mail.removedAt !== null
           )
           break
+        case 'draft':
+          filteredMails = filteredMails.filter(
+            (mail) => mail.sentAt === null && mail.from === loggedinUser.mail
+          )
+          break
         default:
-          // Default case if the status doesn't match any known statuses.
           break
       }
     }

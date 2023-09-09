@@ -6,20 +6,8 @@ export function MailList({
   onDeleteClick,
   onMarkReadClick,
   onStarClick,
+  onMailClick,
 }) {
-  function handleDeleteClick(id) {
-    onDeleteClick(id)
-  }
-
-  function handleMarkReadClick(id, ev) {
-    ev.stopPropagation()
-    onMarkReadClick(id)
-  }
-
-  function handleStarClick(id) {
-    onStarClick(id)
-  }
-
   console.log('from mailList', mails)
   return (
     <div className='mail-list'>
@@ -30,14 +18,19 @@ export function MailList({
             className={`mail-item mail-grid ${
               mail.isRead ? 'read-mail' : 'unread-mail'
             }`}
+            onClick={(event) => {
+              event.stopPropagation()
+              onMailClick(mail.id)
+            }}
           >
             <div>
               <input type='checkbox' />
             </div>
             <button
               className='star-btn'
-              onClick={() => {
-                handleStarClick(mail.id)
+              onClick={(event) => {
+                event.stopPropagation()
+                onStarClick(mail.id)
               }}
             >
               <img src='assets/img/star.svg'></img>
@@ -45,12 +38,7 @@ export function MailList({
 
             <div>{mail.from}</div>
 
-            <div
-              onClick={(event) => {
-                handleMarkReadClick(mail.id, event)
-              }}
-              className='desc-div truncate'
-            >
+            <div className='desc-div truncate'>
               <Link to={`/mail/details/${mail.id}`}>
                 {mail.subject} - {mail.body}
               </Link>
@@ -61,13 +49,22 @@ export function MailList({
             </div>
 
             <div className='action-icons'>
-              <button title='Delete' onClick={() => handleDeleteClick(mail.id)}>
+              <button
+                title='Delete'
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onDeleteClick(mail.id)
+                }}
+              >
                 <img src='assets/img/delete.svg'></img>
               </button>
 
               <button
                 title='Mark as read'
-                onClick={(event) => handleMarkReadClick(mail.id, event)}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onMarkReadClick(mail.id)
+                }}
               >
                 <img src='assets/img/markasread.svg' alt='Mark As Read'></img>
               </button>

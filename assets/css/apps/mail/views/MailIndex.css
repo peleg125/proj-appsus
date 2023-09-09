@@ -1,26 +1,34 @@
+.main-container {
+  height: 100vh;
+}
+
 .mail-index {
   display: grid;
-  grid-template-columns: 260px 3fr;
-  grid-template-areas: 'sidebar mail-main-content';
-  /* 'sidebar mail-main-content'; */
+  grid-template-columns: 260px 3fr 1.6em;
+  grid-template-areas: 'sidebar mail-main-content mail-main-content';
+
+  height: 100%;
 }
 
 .sidebar {
   grid-area: sidebar;
   background-color: #000;
+  height: 100%;
 }
 
 .mail-main-content {
   grid-area: mail-main-content;
   background-color: var(--primary-color);
+  height: 100%;
+  overflow-y: auto;
 }
 
-.compose-button {
+/* .compose-button {
   grid-area: compose-button;
   position: fixed;
   bottom: 20px;
   right: 20px;
-}
+} */
 
 .compose-modal {
   position: fixed;

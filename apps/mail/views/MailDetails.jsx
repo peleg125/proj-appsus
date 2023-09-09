@@ -29,7 +29,9 @@ export function MailDetails() {
 
   return (
     <section className='mail-container main-layout'>
-      <button onClick={() => onBack()}>Back</button>
+      <button className='details-back-btn' onClick={() => onBack()}>
+        Back
+      </button>
       <article className='mail-details'>
         <h1 className='place-self-center'>{mail.subject}</h1>
 
