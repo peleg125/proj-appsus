@@ -1,6 +1,6 @@
 const { Link } = ReactRouterDOM
+import { MailStar } from 'mailStar.jsx'
 
-// TODO: ADD CHECKBOX TO FILTER
 export function MailList({
   mails,
   onDeleteClick,
@@ -22,7 +22,7 @@ export function MailList({
               onMailClick(mail.id)
             }}
           >
-            <div>
+            {/* <div>
               <input type='checkbox' />
             </div>
             <button
@@ -33,6 +33,18 @@ export function MailList({
               }}
             >
               <img src='assets/img/star.svg'></img>
+            </button> */}
+            <div>
+              <input type='checkbox' />
+            </div>
+            <button
+              className='star-btn'
+              onClick={(event) => {
+                event.stopPropagation()
+                onStarClick(mail.id)
+              }}
+            >
+              <MailStar isFilled={mail.isStarred} />
             </button>
 
             <div>{mail.from}</div>

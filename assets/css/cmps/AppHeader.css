@@ -1,25 +1,24 @@
 header {
-
-    background: var(--primary-color);
-    border-bottom: 1px solid white;
+  background: var(--primary-color);
+  border-bottom: 1px solid white;
 }
 
 .app-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
 }
 
 nav a {
-    margin: .5em;
+  margin: 0.5em;
 }
 
 nav a:active {
-    color: purple;
+  color: purple;
 }
 
 nav a.active {
-    color: darkblue;
-    font-weight: bold;
-    text-decoration: overline;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: overline;
 }

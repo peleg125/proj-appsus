@@ -3,10 +3,11 @@ import { MailFilter } from '../cmps/MailFilter.jsx'
 import { MailFolderList } from '../cmps/MailFolderList.jsx'
 import { MailCompose } from '../cmps/MailCompose.jsx'
 import { mailService } from '../services/mail.service.js'
-
+import { showSuccessMsg } from '../../../services/event-bus.service.js'
 export function MailIndex() {
   const { useState, useEffect } = React
   const { useNavigate, useParams, useLocation } = ReactRouterDOM
+
   const [filterBy, setFilterBy] = useState(mailService.getDefaultMailFilter())
   const [mails, setMails] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
@@ -78,6 +79,9 @@ export function MailIndex() {
   function handleMarkReadClick(id) {
     handleEntityUpdate(id, (mail) => {
       mail.isRead = !mail.isRead
+      showSuccessMsg(
+        mail.isRead ? 'Mail marked as read!' : ' Mail marked as unread!'
+      )
       return mail
     })
   }
@@ -86,6 +90,7 @@ export function MailIndex() {
       mail.isStarred = !mail.isStarred
       return mail
     })
+    showSuccessMsg('Starred!')
   }
 
   function handleClick(id) {
@@ -104,6 +109,7 @@ export function MailIndex() {
         setMails((prevMails) => prevMails.filter((mail) => mail.id !== mailId))
       )
       .catch((err) => console.log('err:', err))
+    showSuccessMsg('Mail deleted!')
   }
 
   function handleSaveEmail(mail) {
@@ -144,6 +150,7 @@ export function MailIndex() {
 
         <div className='mail-main-content'>
           <MailFilter onFilterChange={handleFilterChange} filterBy={filterBy} />
+
           <MailList
             mails={mails}
             onDeleteClick={handleDeleteClick}
