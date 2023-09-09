@@ -20,7 +20,6 @@ export function MailIndex() {
 
     const txt = queryParams.get('txt')
     const compose = queryParams.get('compose') === 'true'
-    const draftId = queryParams.get('draftId')
 
     setComposeOpen(compose)
     const status = statusParam
@@ -60,13 +59,9 @@ export function MailIndex() {
   }
 
   function handleDraftSave(draft, id = null) {
-    console.log(
-      `Attempting to save draft. Draft: ${JSON.stringify(draft)}, ID: ${id}`
-    )
     return mailService
       .addOrUpdateDraft(draft, id)
       .then((modDraft) => {
-        console.log('Successfully saved draft. Returned draft ID:', modDraft.id)
         if (modDraft) {
           navigate(
             `/mail/${filterBy.status}/?compose=true&draftId=${modDraft.id}`

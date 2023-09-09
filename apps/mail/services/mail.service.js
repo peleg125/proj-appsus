@@ -251,83 +251,71 @@ const criteria = {
   labels: [],
 }
 
+function filterByStatus(mails, status, user) {
+  switch (status) {
+    case 'starred':
+      return mails.filter((mail) => mail.isStarred === true)
+    case 'inbox':
+      return mails.filter(
+        (mail) => mail.to === user.mail && mail.removedAt === null
+      )
+    case 'sent':
+      return mails.filter(
+        (mail) =>
+          mail.from === user.mail &&
+          mail.removedAt === null &&
+          mail.sentAt !== null
+      )
+    case 'trash':
+      return mails.filter((mail) => mail.removedAt !== null)
+    case 'draft':
+      return mails.filter(
+        (mail) => mail.sentAt === null && mail.from === user.mail
+      )
+    default:
+      return mails
+  }
+}
+
+function filterByText(mails, txt) {
+  const regex = new RegExp(txt, 'i')
+  return mails.filter(
+    (mail) =>
+      regex.test(mail.subject) || regex.test(mail.body) || regex.test(mail.from)
+  )
+}
+
+function filterByRead(mails, isRead) {
+  return mails.filter((mail) => mail.isRead === isRead)
+}
+
+function filterByStarred(mails, isStarred) {
+  return mails.filter((mail) => mail.isStarred === isStarred)
+}
+
 function query(filterBy = {}) {
   return storageService.query(MAILS_KEY).then((mails) => {
     let filteredMails = mails
 
     if (filterBy.status) {
-      switch (filterBy.status) {
-        case 'starred':
-          if (
-            filterBy.hasOwnProperty('isStarred') &&
-            filterBy.isStarred !== null
-          ) {
-          } else {
-            filteredMails = filteredMails.filter(
-              (mail) => mail.isStarred === true
-            )
-          }
-          break
-        case 'inbox':
-          filteredMails = filteredMails.filter(
-            (mail) => mail.to === loggedinUser.mail && mail.removedAt === null
-          )
-          break
-        case 'sent':
-          filteredMails = filteredMails.filter(
-            (mail) =>
-              mail.from === loggedinUser.mail &&
-              mail.removedAt === null &&
-              mail.sentAt !== null
-          )
-          break
-        case 'trash':
-          filteredMails = filteredMails.filter(
-            (mail) => mail.removedAt !== null
-          )
-          break
-        case 'draft':
-          filteredMails = filteredMails.filter(
-            (mail) => mail.sentAt === null && mail.from === loggedinUser.mail
-          )
-          break
-        default:
-          break
-      }
-    }
-    if (filterBy.txt) {
-      const txt = new RegExp(filterBy.txt, 'i')
-      filteredMails = filteredMails.filter(
-        (mail) =>
-          txt.test(mail.subject) || txt.test(mail.body) || txt.test(mail.from)
+      filteredMails = filterByStatus(
+        filteredMails,
+        filterBy.status,
+        loggedinUser
       )
+    }
 
-      console.log('from regex', filteredMails)
-      console.log('filterby', filterBy)
+    if (filterBy.txt) {
+      filteredMails = filterByText(filteredMails, filterBy.txt)
     }
 
     if (filterBy.hasOwnProperty('isRead') && filterBy.isRead !== null) {
-      filteredMails = filteredMails.filter(
-        (mail) => mail.isRead === filterBy.isRead
-      )
+      filteredMails = filterByRead(filteredMails, filterBy.isRead)
     }
 
     if (filterBy.hasOwnProperty('isStarred') && filterBy.isStarred !== null) {
-      filteredMails = filteredMails.filter(
-        (mail) => mail.isStarred === filterBy.isStarred
-      )
+      filteredMails = filterByStarred(filteredMails, filterBy.isStarred)
     }
-
-    if (filterBy.labels && filterBy.labels.length > 0) {
-      filteredMails = filteredMails.filter((mail) =>
-        filterBy.labels.some((label) => mail.labels.includes(label))
-      )
-
-      console.log('filterby', filterBy)
-      console.log('from labled', filteredMails)
-    }
-    console.log('from end', filteredMails)
-    console.log('filterby', filterBy)
 
     return filteredMails
   })

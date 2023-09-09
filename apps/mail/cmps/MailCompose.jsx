@@ -27,6 +27,7 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
         .catch((err) => console.log('Error has occurred in getting draft', err))
     }
   }, [location.search])
+
   useEffect(() => {
     draftRef.current = draft
   }, [draft])

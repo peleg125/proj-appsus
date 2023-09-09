@@ -4,8 +4,6 @@ export function MailFolderList({ unreadCount }) {
   const location = useLocation()
   const currentPath = location.pathname
 
-  // const unreadCount = mails.filter((mail) => !mail.isRead).length
-
   function isActive(path) {
     return currentPath.includes(path) ? 'active-folder' : ''
   }
