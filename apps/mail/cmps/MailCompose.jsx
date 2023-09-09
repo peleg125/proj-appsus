@@ -51,12 +51,22 @@ export function MailCompose({ isOpen, onClose, onSaveDraft, onSendEmail }) {
     }
     onSendEmail(emailData)
   }
+  function handleSendClick(ev) {
+    ev.preventDefault()
+    onSendEmail(draft)
+    onClose()
+  }
+
+  function handleCloseClick() {
+    clearInterval(interval)
+    onClose()
+  }
 
   if (!isOpen) return null
 
   return (
     <div className={isOpen ? 'modal' : ''}>
-      <button onClick={onClose}>Close</button>
+      <button onClick={handleCloseClick}>Close</button>
       <form onSubmit={handleSendClick}>
         <input
           name='to'

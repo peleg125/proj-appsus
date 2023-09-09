@@ -8,7 +8,7 @@ export const mailService = {
   update,
   remove,
   getDefaultMailFilter,
-  addDraftMail,
+  addOrUpdateDraft,
 }
 const MAILS_KEY = 'emailsDB'
 const demoMails = [
@@ -18,6 +18,7 @@ const demoMails = [
     body: 'Would love to catch up sometimes',
     isRead: false,
     sentAt: 1551133930594,
+    isStarred: false,
     removedAt: null,
     from: 'momo@momo.com',
     to: 'user@appsus.com',
@@ -28,6 +29,7 @@ const demoMails = [
     body: "Don't forget we have an important meeting scheduled for Monday.",
     isRead: true,
     sentAt: 1551231930594,
+    isStarred: false,
     removedAt: null,
     from: 'boss@appsus.com',
     to: 'user@appsus.com',
@@ -38,6 +40,7 @@ const demoMails = [
     body: "Here is our weekly newsletter. Don't miss our top stories!",
     isRead: false,
     sentAt: 1551231930595,
+    isStarred: false,
     removedAt: null,
     from: 'newsletter@appsus.com',
     to: 'user@appsus.com',
@@ -48,6 +51,7 @@ const demoMails = [
     body: 'Your invoice is due in 5 days. Please make a payment.',
     isRead: true,
     sentAt: 1551231930596,
+    isStarred: true,
     removedAt: null,
     from: 'billing@appsus.com',
     to: 'user@appsus.com',
@@ -58,6 +62,7 @@ const demoMails = [
     body: 'ממש חייב להפסיק לענות, זה נוראי',
     isRead: true,
     sentAt: 1551231930596,
+    isStarred: false,
     removedAt: null,
     from: 'user@appsus.com',
     to: 'mom@gmail.com',
@@ -68,6 +73,7 @@ const demoMails = [
     body: 'You are cordially invited to our annual event. RSVP by the 5th.',
     isRead: true,
     sentAt: 1650987200000,
+    isStarred: false,
     removedAt: 1650987200000,
     from: 'events@appsus.com',
     to: 'user@appsus.com',
@@ -78,6 +84,7 @@ const demoMails = [
     body: 'Please take a moment to complete our customer satisfaction survey.',
     isRead: false,
     sentAt: 1651129200000,
+    isStarred: false,
     removedAt: 1650987204315,
     from: 'feedback@appsus.com',
     to: 'user@appsus.com',
@@ -88,6 +95,7 @@ const demoMails = [
     body: 'Our latest collection is now available with a 30% discount. Use code SPECIAL30.',
     isRead: false,
     sentAt: 1651365600000,
+    isStarred: false,
     removedAt: null,
     from: 'marketing@appsus.com',
     to: 'user@appsus.com',
@@ -99,6 +107,7 @@ const demoMails = [
     isRead: false,
     sentAt: null,
     removedAt: null,
+    isStarred: false,
     from: 'user@appsus.com',
     to: 'recipient@appsus.com',
   },
@@ -108,6 +117,7 @@ const demoMails = [
     body: 'Your subscription will end in 3 days. Please renew to continue using our services. please consider subscribing to my YT channel',
     isRead: true,
     sentAt: 1651920000000,
+    isStarred: false,
     removedAt: null,
     from: 'billing@appsus.com',
     to: 'user@appsus.com',
@@ -119,6 +129,7 @@ const demoMails = [
     isRead: true,
     isRemoved: null,
     sentAt: 1664531200000,
+    isStarred: false,
     from: 'friend@example.com',
     to: 'user@appsus.com',
   },
@@ -129,6 +140,7 @@ const demoMails = [
     isRead: false,
     isRemoved: null,
     sentAt: 1659724800000,
+    isStarred: false,
     from: 'boss@company.com',
     to: 'user@appsus.com',
   },
@@ -139,6 +151,7 @@ const demoMails = [
     isRead: true,
     isRemoved: true,
     sentAt: 1665129600000,
+    isStarred: false,
     from: 'traveldeals@exploreworld.com',
     to: 'user@appsus.com',
   },
@@ -149,6 +162,7 @@ const demoMails = [
     isRead: true,
     isRemoved: null,
     sentAt: 1662844800000,
+    isStarred: true,
     from: 'hr@company.com',
     to: 'user@appsus.com',
   },
@@ -159,6 +173,7 @@ const demoMails = [
     isRead: false,
     isRemoved: null,
     sentAt: 1663473600000,
+    isStarred: false,
     from: 'technews@innovate.com',
     to: 'user@appsus.com',
   },
@@ -169,6 +184,7 @@ const demoMails = [
     isRead: true,
     isRemoved: null,
     sentAt: 1658726400000,
+    isStarred: false,
     from: 'billing@businessco.com',
     to: 'user@appsus.com',
   },
@@ -179,6 +195,7 @@ const demoMails = [
     isRead: false,
     isRemoved: true,
     sentAt: 1659451200000,
+    isStarred: false,
     from: 'charityevents@helpinghands.org',
     to: 'user@appsus.com',
   },
@@ -189,6 +206,7 @@ const demoMails = [
     isRead: false,
     isRemoved: null,
     sentAt: 1657478400000,
+    isStarred: false,
     from: 'finance@taxfirm.com',
     to: 'user@appsus.com',
   },
@@ -199,6 +217,7 @@ const demoMails = [
     isRead: true,
     isRemoved: null,
     sentAt: 1664217600000,
+    isStarred: false,
     from: 'schooladmin@example.com',
     to: 'user@appsus.com',
   },
@@ -209,6 +228,7 @@ const demoMails = [
     isRead: true,
     isRemoved: 1662403200000,
     sentAt: 1662403200000,
+    isStarred: false,
     from: 'customerloyalty@example.com',
     to: 'user@appsus.com',
   },
@@ -344,11 +364,24 @@ function getDefaultMailFilter() {
     labels: [],
   }
 }
-function addDraftMail(mail) {}
+function addOrUpdateDraft(mail, id = null) {
+  if (id) {
+    return update(mail)
+  } else {
+    const draftMail = {
+      ..._createMail(),
+      ...mail,
+      from: loggedinUser.mail,
+      sentAt: null,
+      isRead: true,
+    }
+    return storageService.post(MAILS_KEY, draftMail)
+  }
+}
 
-function _createMail() {
+function _createMail(id = null) {
   return {
-    id: '',
+    id: id || utilService.makeId(),
     subject: '',
     body: '',
     isRead: false,

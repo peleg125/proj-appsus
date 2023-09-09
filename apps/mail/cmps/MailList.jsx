@@ -56,7 +56,9 @@ export function MailList({
               </Link>
             </div>
 
-            <div>{new Date(mail.sentAt).toLocaleString()}</div>
+            <div className='date-col'>
+              {new Date(mail.sentAt).toLocaleString()}
+            </div>
 
             <div className='action-icons'>
               <button title='Delete' onClick={() => handleDeleteClick(mail.id)}>

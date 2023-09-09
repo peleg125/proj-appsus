@@ -53,11 +53,16 @@ export function MailIndex() {
   }
 
   function handleDraftSave(draft) {
-    // Save the draft and get its ID
-    // const draftId = // save the draft and get its ID (e.g., from an API)
-    // Update the query parameters to include the draft ID
-    // navigate(`/mail/compose?id=${draftId}`)
+    mailService
+      .addOrUpdateDraft(draft)
+      .then((draftId) => {
+        navigate(`/mail/compose?${draftId}`)
+      })
+      .catch((err) => {
+        console.error('Error saving draft:', err)
+      })
   }
+
   function handleStarClick(id) {
     mailService
       .get(id)

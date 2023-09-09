@@ -1,22 +1,11 @@
 .mail-list {
   width: 100%;
 }
-
-.mail-grid {
-  /* display: grid;
-  grid-template-columns: 50px 50px 1fr 3fr 150px;
-  gap: 10px;
-  align-items: center; */
-  padding: 10px;
-  border: 2px #313131;
-  border-style: solid none;
-}
 .mail-list-body {
   display: grid;
 }
 
 .star-btn {
-  /* margin-left: 10px; */
   background: none;
   border: none;
   cursor: pointer;
@@ -35,6 +24,9 @@
   align-items: center;
   grid-gap: 1em;
   position: relative;
+  padding: 10px;
+  border: 2px #313131;
+  border-style: solid none;
 }
 
 .mail-item:hover {
@@ -54,13 +46,16 @@
   transform: translateY(-50%);
   z-index: 2;
   visibility: hidden;
-  background-color: #202124;
+  background-color: transparent;
   width: 150px;
   display: flex;
   justify-content: space-evenly;
 }
 .mail-item:hover .action-icons {
   visibility: visible;
+}
+.mail-item:hover .date-col {
+  visibility: hidden;
 }
 
 .action-icons button {
@@ -79,8 +74,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2b2b2b;
-  opacity: 0.8;
+  background-color: #b7b7b7;
+  opacity: 0.4;
   border-radius: 50%;
   z-index: -1;
   transition: opacity 0.3s ease;
