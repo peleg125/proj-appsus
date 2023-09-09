@@ -21,8 +21,8 @@ export function NoteList({ notes, handleColorChange, onRemoveNote, onTogglePin, 
         notes.map((note) => (
           <li className={`note ${note.style.backgroundColor}`} key={note.id}>
             <NotePreview note={note} />
+            <NoteImg noteId={note.id} onImageChange={(image) => handleImageChange(note.id, image)} selectedImage={selectedImages[note.id]} />
             <div className='btn-note-container'>
-              <NoteImg noteId={note.id} onImageChange={(image) => handleImageChange(note.id, image)} selectedImage={selectedImages[note.id]} />
               <button className='btn-note btn-pin' onClick={() => onTogglePin(note.id)}>
                 <img title='Pin note' className='pin-icon' src='assets/img/pin.svg'></img>
               </button>

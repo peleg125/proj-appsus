@@ -73,6 +73,7 @@ export function NoteIndex() {
       .remove(noteId)
       .then(() => {
         setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId))
+
         showSuccessMsg("Note Removed!")
       })
       .catch((err) => {})

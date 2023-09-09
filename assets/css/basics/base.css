@@ -19,12 +19,16 @@ a {
   color: inherit;
 }
 
-img {
+/* img {
   height: 100%;
   width: 100%;
   object-fit: cover;
-}
+} */
 
 li {
   list-style: none;
+}
+
+.debug * {
+  outline: 1px solid gold
 }

@@ -3,4 +3,15 @@
 
   --primary-color-1: #b7b7b7;
   --primary-color: #202124;
+  --clr1: rgb(96, 107, 91);
+  --clr2: rgb(120, 99, 110);
+
+  --clr1bg: rgb(139, 222, 233);
+  --clr1bg-light: rgb(205, 221, 200);
+  --clr2bg: rgb(233, 206, 221);
+  --clr2bg-light: rgb(247, 185, 219);
+
+  --gray1: rgb(240, 240, 240);
+  --gray2: rgb(155, 155, 155);
+  --gray3: rgb(44, 44, 44);
 }

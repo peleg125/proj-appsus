@@ -1,0 +1,170 @@
+.book-list {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+
+  }
+  
+  .book-list li {
+    width: 250px;
+    flex-direction: column; 
+    border: black solid 1px;
+    background-color: rgba(228, 210, 225, 0.904);
+    margin-bottom: 10px;
+    position: relative;
+    border-radius: 1em;
+  }
+
+  .cheap {
+    color: green;
+  }
+  
+  .expensive {
+    color: red;
+  }
+
+  .sale {
+    color: rgb(218, 69, 10);
+    font-weight: 700;
+  }
+
+  .read-btn {
+    background-color: #8d2c68c0;
+    color: white;
+    position: absolute; 
+    bottom: 5px;
+    right: 5px;
+    cursor: pointer;
+    border-radius: 0.5em;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 30px;
+
+  }
+  
+  .card-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .book-card {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    padding: 20px;
+
+  }
+  
+  .book-image{
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  h2 {
+    font-size: 20px;
+    margin: 0;
+  }
+  
+  p {
+    margin: 5px 0;
+  }
+  
+  .book-filter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  
+  .filter {
+    flex: 0 0 calc(33.33% - 20px);
+    margin-right: 20px;
+  }
+  
+  /* label {
+    font-weight: bold;
+  } */
+  
+  input[type="text"],
+  input[type="number"],
+  input[type="range"]
+   {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  input[type="range"],
+  input[type="checkbox"]
+  {
+    cursor: pointer;
+  }
+
+
+  .book-title {
+    font-family:'Times New Roman', Times, serif;
+    font-weight: 700;
+    color: rgb(4, 0, 255);
+    text-transform: capitalize;
+  }
+  
+  .user-msg {
+    z-index: 10;
+  }
+
+  .add-book {
+    text-decoration: underline;
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 20px;
+  }
+
+  .add-google-book {
+    text-decoration: underline;
+    font-weight: 700;
+    margin-top: 20px;
+
+  }
+
+  .book-link-container {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .filter-text {
+    margin-top: 10px;
+  }
+
+  .btn-book {
+    cursor: pointer;
+    background-color: var(--clr2bg);
+    margin: 0.5em;
+    border: 0;
+    padding: 0.5em 0.8em;
+    border-radius: 4px;   
+}
+
+.btn-book:hover {
+    background-color: var(--clr2);
+    color: white;
+    transition: .3s;
+}
+.input-book:focus {
+    background-color: var(--clr1bg);
+    transition: background-color 1s;
+}
