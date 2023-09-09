@@ -90,7 +90,7 @@ function _createNotes() {
       {
         id: "n103",
         type: "NoteImg",
-        isPinned: false,
+        isPinned: true,
         info: {
           url: "http://some-img/me",
           title: "Bobi and Me",
@@ -119,10 +119,10 @@ function _createNotes() {
   }
 }
 
-function createNote(title, txt, url) {
+function createNote(title, txt, url, noteType) {
   const newNote = {
     id: utilService.makeId(),
-    type: "NoteTxt",
+    type: noteType,
     isPinned: false,
     style: {
       backgroundColor: "#00d",
@@ -130,7 +130,7 @@ function createNote(title, txt, url) {
     info: {
       title: title || "",
       txt: txt || "",
-      url: url,
+      url: url || "",
     },
   }
   let notes = utilService.loadFromStorage(NOTE_KEY)

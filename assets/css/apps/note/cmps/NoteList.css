@@ -2,7 +2,7 @@
 
 .note-container {
    display: block;
-   columns: 6 200px ;
+   columns: 6 220px ;
    column-gap: 12px;
 }
 
@@ -12,23 +12,24 @@
    margin-bottom: 1rem;
    padding: 10px;
    break-inside: avoid;
+   position: relative;
 }
 
 .main-container {
    color: white;
    height: 100vh;
- }
+}
  
  .note-txt {
     display: inline-block;
     font-size: .875rem;
-   }
+}
    
    .note-title {
    font-size: 1rem;
    margin-bottom: 0;
 
- }
+}
 
  .txt-container {
    display: flex;
@@ -37,27 +38,98 @@
    word-wrap: break-word;
    white-space: pre-wrap;
    word-break: break-word;
- }
-
- 
- .remove-icon {
-    visibility: hidden;
-    opacity: 0; 
-    transition: opacity 0.5s; 
-   }
-   
-   .note:hover .remove-icon {
-     visibility: visible;
-     opacity: 1; 
-     transition: opacity 0.5s; 
-  }
-  
-.btn-remove {
+} 
+ .btn-note {
+   width: 25px;
+   height: 25px;
    z-index: 10;
-   margin-left: 10px;
    background: none;
    border: none;
    cursor: pointer;
+   position: absolute;
+ }
+ 
+ .btn-remove {
+    bottom: 5px;
+    right: 10px;
+}
+ 
+ .remove-icon {
+   width: 25px;
+   height: 25px;
+   visibility: hidden;
+   opacity: 0; 
+   transition: opacity 0.5s; 
+}
+   
+   .note:hover .remove-icon {
+   visibility: visible;
+   opacity: 1; 
+   transition: opacity 0.5s; 
+}   
+   
+   .btn-pin {
+   top: 5px; 
+   right: 10px; 
 }
 
+  .pin-icon {
+   width: 25px;  
+   height: 25px;
+   visibility: hidden;
+   opacity: 0; 
+   transition: opacity 0.5s; 
+}  
 
+  .note:hover .pin-icon {
+   visibility: visible;  
+   opacity: 1; 
+   transition: opacity 0.5s; 
+}   
+
+   .btn-duplicate {
+      bottom: 5px;
+      right: 45px;
+}
+
+   .duplicate-icon{
+   width: 25px;  
+   height: 25px;
+   visibility: hidden;
+   opacity: 0; 
+   transition: opacity 0.5s; 
+}
+
+   .note:hover .duplicate-icon {
+   visibility: visible;  
+   opacity: 1; 
+   transition: opacity 0.5s; 
+}   
+
+   .file-input {
+      display: none;
+   }
+
+   .file-label {
+      position: absolute;
+      bottom: 0;
+      right: 70px;
+   }
+ 
+   .file-icon {
+      width: 25px;  
+      height: 25px;
+      visibility: hidden;
+      opacity: 0; 
+      transition: opacity 0.5s; 
+   }
+
+   .note:hover .file-icon {
+      visibility: visible;  
+      opacity: 1; 
+      transition: opacity 0.5s; 
+   }
+
+   .btn-note-container {
+      margin-top: 30px;
+   }
