@@ -6,9 +6,7 @@ import { About } from "./views/About.jsx"
 import { Home } from "./views/Home.jsx"
 import { MailIndex } from "./apps/mail/views/MailIndex.jsx"
 import { NoteIndex } from "./apps/note/views/NoteIndex.jsx"
-import { NoteModal } from "./apps/note/cmps/NoteModal.jsx"
 import { MailDetails } from "./apps/mail/views/MailDetails.jsx"
-import { NoteEdit } from "./apps/note/views/NoteEdit.jsx"
 
 // import { BookIndex } from "./apps/book/views/BookIndex.jsx"
 
@@ -24,7 +22,7 @@ export function App() {
           <Route path='/mail/:status' element={<MailIndex />} />
           <Route path='/mail/details/:mailId' element={<MailDetails />} />
           <Route path='/note' element={<NoteIndex />}>
-            <Route path='/note/:noteId' element={<NoteModal />} />
+            <Route path='/note/:noteId' />
           </Route>
 
           {/* <Route path='/book' element={<BookIndex />} /> */}

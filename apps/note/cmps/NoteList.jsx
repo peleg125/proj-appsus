@@ -1,29 +1,28 @@
 import { NoteImg } from "./NoteImg.jsx"
 import { NotePreview } from "./NotePreview.jsx"
+import { noteService } from "../services/note.service.js"
 const { Link, Outlet } = ReactRouterDOM
 const { useState } = React
 
-export function NoteList({ notes, handleColorChange, onRemoveNote, onTogglePin, onEditNote, onDuplicateNote }) {
+export function NoteList({ notes, handleColorChange, onRemoveNote, onTogglePin, onDuplicateNote }) {
   const [selectedImages, setSelectedImages] = useState({})
+
   const handleImageChange = (noteId, image) => {
     setSelectedImages((prevImages) => ({
       ...prevImages,
       [noteId]: image,
     }))
-  }
 
+    noteService.update(noteId)
+  }
   return (
     <ul className='note-container'>
       {notes &&
         notes.map((note) => (
           <li className={`note ${note.style.backgroundColor}`} key={note.id}>
-            <button>
-              <Link to={`/note/${note.id}`}>Edit</Link>
-            </button>
-
             <NotePreview note={note} />
             <div className='btn-note-container'>
-              <NoteImg noteId={note.id} onImageChange={(image) => handleImageChange(note.id, image)} />
+              <NoteImg noteId={note.id} onImageChange={(image) => handleImageChange(note.id, image)} selectedImage={selectedImages[note.id]} />
               <button className='btn-note btn-pin' onClick={() => onTogglePin(note.id)}>
                 <img title='Pin note' className='pin-icon' src='assets/img/pin.svg'></img>
               </button>

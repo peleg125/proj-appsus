@@ -1,10 +1,8 @@
 const { useEffect, useState } = React
-const { Link } = ReactRouterDOM
 
 import { noteService } from "../services/note.service.js"
 import { NoteList } from "../cmps/NoteList.jsx"
 import { NoteForm } from "../cmps/NoteForm.jsx"
-import { NoteModal } from "../cmps/NoteModal.jsx"
 import { storageService } from "../../../services/async-storage.service.js"
 import { NoteFilter } from "../cmps/NoteFilter.jsx"
 import { utilService } from "../../../services/util.service.js"
@@ -12,11 +10,11 @@ import { utilService } from "../../../services/util.service.js"
 export function NoteIndex() {
   const [notes, setNotes] = useState([])
   const [selectedColor, setSelectedColor] = useState("")
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  // const [isModalOpen, setIsModalOpen] = useState(false)
   const [filterBy, setFilterBy] = useState(noteService.getDefaultFilter())
-  const [selectedNote, setSelectedNote] = useState(null)
   const [selectedNoteType, setSelectedNoteType] = useState("NoteTxt")
-  const sortedNotes = [...notes].sort((a, b) => (a.isPinned === b.isPinned ? 0 : a.isPinned ? -1 : 1))
+  const [selectedTextNote, setSelectedTextNote] = useState(null)
+  const [selectedTodosNote, setSelectedTodosNote] = useState(null)
   useEffect(() => {
     noteService.query(filterBy).then((filteredNotes) => {
       setNotes(filteredNotes)
@@ -24,6 +22,31 @@ export function NoteIndex() {
     // const fetchedNotes = noteService.getNotes()
     // setNotes(fetchedNotes)
   }, [filterBy])
+
+  const handleAddNote = (newNote) => {
+    setNotes((prevNotes) => [...prevNotes, newNote])
+  }
+
+  const handleNoteTypeChange = (noteType) => {
+    setSelectedNoteType(noteType)
+  }
+
+  const handleTextNoteSelect = () => {
+    setSelectedNoteType("NoteTxt")
+    setSelectedTextNote({ title: "", txt: "" })
+    setSelectedTodosNote(null)
+  }
+
+  const handleTodosNoteSelect = () => {
+    setSelectedNoteType("NoteTodos")
+    setSelectedTextNote(null)
+    setSelectedTodosNote({
+      info: {
+        title: "",
+        todos: [],
+      },
+    })
+  }
 
   function onTogglePin(noteId) {
     const updatedNotes = [...notes]
@@ -37,30 +60,22 @@ export function NoteIndex() {
     }
   }
 
-  function handleAddNote(newNote) {
-    console.log("hey")
-    setNotes((prevNotes) => [...prevNotes, newNote])
-  }
-
   function onSetFilterBy(filterBy) {
     setFilterBy((prevFilter) => ({ ...prevFilter, ...filterBy }))
   }
 
-  function toggleNoteType() {
+  function onToggleNoteType() {
     setSelectedNoteType((prevNoteType) => (prevNoteType === "NoteTxt" ? "NoteTodos" : "NoteTxt"))
   }
 
   function onRemoveNote(noteId) {
-    console.log(noteId)
     noteService
       .remove(noteId)
       .then(() => {
         setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId))
         showSuccessMsg("Note Removed!")
       })
-      .catch((err) => {
-        console.log("hey")
-      })
+      .catch((err) => {})
   }
 
   function onDuplicateNote(noteId) {
@@ -87,16 +102,8 @@ export function NoteIndex() {
     }
   }
 
-  // const closeModal = () => {
-  //   setIsModalOpen(false)
-  //   setSelectedNote(null)
-  // }
-
   function onEditNote(note) {
-    console.log(note.id, "modal is open")
-    console.log(note)
     setIsModalOpen(true)
-    console.log(isModalOpen)
   }
 
   function onChangeColor(noteId, color) {
@@ -113,45 +120,37 @@ export function NoteIndex() {
     setNotes(updatedNotes)
   }
 
-  function editText() {
-    noteService.get()
-  }
-
-  // function handleNoteUpdated(updatedNote) {
-  //   const updatedNoteIndex = notes.findIndex((note) => note.id === updatedNote.id)
-
-  //   if (updatedNoteIndex !== -1) {
-  //     const updatedNotes = [...notes]
-
-  //     updatedNotes[updatedNoteIndex] = updatedNote
-
-  //     setNotes(updatedNotes)
-  //   }
-  // }
-
   function handleColorChange(note, color) {
-    note.style.backgroundColor = color
-    console.log(note.style.backgroundColor)
-    note.color = color
-    onChangeColor(note.id, color)
-    storageService
-      .get("noteDB", note.id)
-      .then((updatedNote) => {
-        updatedNote.style.backgroundColor = color
-        return storageService.put("noteDB", updatedNote)
-      })
-      .then(() => {
-        console.log("Color updated and saved to storage")
-      })
-      .catch((error) => {
-        console.error("Error updating and saving color:", error)
-      })
+    if (note.style && typeof note.style.backgroundColor !== "undefined") {
+      note.style.backgroundColor = color
+      console.log(note.style.backgroundColor)
+      note.color = color
+      onChangeColor(note.id, color)
+      storageService
+        .get("noteDB", note.id)
+        .then((updatedNote) => {
+          updatedNote.style.backgroundColor = color
+          return storageService.put("noteDB", updatedNote)
+        })
+        .then(() => {
+          console.log("Color updated and saved to storage")
+        })
+
+        .catch((error) => {
+          console.error("Error updating and saving color:", error)
+        })
+    }
   }
 
   return (
     <div className='main-container'>
+      {/* <NoteCanvas onAddNote={handleAddNote} /> */}
       <NoteFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy} />
-      <NoteForm onAddNote={(newNote) => handleAddNote(newNote, selectedNoteType)} isModalOpen={isModalOpen} />
+      {/* <NoteTodos /> */}
+      {/* <button onClick={handleTextNoteSelect}>Add Text Note</button> */}
+      {/* <button onClick={handleTodosNoteSelect}>Add Todos Note</button> */}
+      {selectedNoteType === "NoteTxt" && <NoteForm onAddNote={handleAddNote} note={selectedTextNote} />}
+      {/* {selectedNoteType === "NoteTodos" && <NoteTodos onAddNote={handleAddNote} note={selectedTodosNote} />} */}
       <div className='pinned-notes'>
         {notes.some((note) => note.isPinned) && <h4>Pinned Notes</h4>}
         <NoteList

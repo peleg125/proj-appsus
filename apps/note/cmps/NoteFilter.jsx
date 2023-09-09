@@ -34,16 +34,13 @@ export function NoteFilter({ filterBy, onSetFilterBy }) {
 
   const { txt } = filterByToEdit
   return (
-    <section className='car-filter'>
-      <form onSubmit={onSubmitFilter}>
-        <label htmlFor='txt'>Search: </label>
-        <input value={txt} onChange={handleChange} type='text' placeholder='Text' id='txt' name='txt' />
+    <section className='note-filter'>
+      <form onSubmit={onSubmitFilter} className='filter-form'>
+        <input className='filter-input' value={txt} onChange={handleChange} type='text' placeholder='Search' id='txt' name='txt' />
 
         {/* <select>
                 <option value='todos'></option>
             </select>  */}
-
-        <button>Set Filter</button>
       </form>
     </section>
   )

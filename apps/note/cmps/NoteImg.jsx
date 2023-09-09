@@ -1,28 +1,35 @@
 const { useState } = React
 import { noteService } from "../services/note.service.js"
-export function NoteImg({ onImageChange, noteId }) {
-  const [selectedImage, setSelectedImage] = useState(null)
+export function NoteImg({ onImageChange, noteId, selectedImage }) {
+  const [imageUrl, setImageUrl] = useState(selectedImage)
 
   const handleImageChange = (event) => {
     const file = event.target.files[0]
 
     if (file) {
-      console.log(noteId)
-      setSelectedImage(file)
-      onImageChange()
+      const reader = new FileReader()
 
-      const imageUrl = URL.createObjectURL(file)
-      noteService.update(noteId, imageUrl)
+      reader.onload = (e) => {
+        const newImageUrl = e.target.result
+
+        setImageUrl(newImageUrl)
+
+        if (typeof onImageChange === "function") {
+          onImageChange(noteId, newImageUrl)
+        }
+      }
+
+      reader.readAsDataURL(file)
     }
   }
 
   return (
     <div>
-      <label title='Upload image' className='file-label' htmlFor='file-input'>
-        <img className='file-icon' src='assets/img/upload.svg'></img>
+      <label title='Upload image' className='file-label' htmlFor={`file-input-${noteId}`}>
+        <img className='file-icon' src='assets/img/upload.svg' alt='Upload' />
       </label>
-      <input id='file-input' className='file-input' type='file' accept='image/*' onChange={handleImageChange} />
-      {selectedImage && <img src={URL.createObjectURL(selectedImage)} alt='Selected' />}
+      <input id={`file-input-${noteId}`} className='file-input' type='file' accept='image/*' onChange={handleImageChange} />
+      {imageUrl && <img src={imageUrl} alt='Selected' />}
     </div>
   )
 }

@@ -72,6 +72,7 @@ function _createNotes() {
         },
         info: {
           txt: "Fullstack Me Baby!",
+          url: "http://some-img/me",
         },
       },
       {
@@ -112,6 +113,7 @@ function _createNotes() {
             { txt: "Driving license", doneAt: null },
             { txt: "Coding power", doneAt: 187111111 },
           ],
+          url: "http://some-img/me",
         },
       },
     ]
@@ -133,6 +135,10 @@ function createNote(title, txt, url, noteType) {
       url: url || "",
     },
   }
+  if (noteType === "NoteTodos") {
+    newNote.info.todos = []
+  }
+
   let notes = utilService.loadFromStorage(NOTE_KEY)
   notes.push(newNote)
   utilService.saveToStorage(NOTE_KEY, notes)

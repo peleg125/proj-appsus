@@ -2,8 +2,10 @@
 
 .note-container {
    display: block;
-   columns: 6 220px ;
+   columns: 6 200px ;
    column-gap: 12px;
+   justify-content: center;
+   align-items: center;
 }
 
 .note {
@@ -114,6 +116,7 @@
       position: absolute;
       bottom: 0;
       right: 70px;
+      cursor: pointer;
    }
  
    .file-icon {

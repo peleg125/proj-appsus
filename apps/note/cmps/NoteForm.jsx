@@ -35,7 +35,7 @@ export function NoteForm({ onAddNote, isEditing, noteToEdit, onSaveEdit }) {
     ev.preventDefault()
 
     if (!isEditing) {
-      const newNote = noteService.createNote(noteToAdd.title, noteToAdd.txt)
+      const newNote = noteService.createNote(noteToAdd.title, noteToAdd.txt, "", "NoteTxt")
       onAddNote(newNote)
       setNoteToAdd({ title: "", txt: "" })
     } else {
@@ -50,6 +50,7 @@ export function NoteForm({ onAddNote, isEditing, noteToEdit, onSaveEdit }) {
       <form className='form-container' onSubmit={handleFormSubmit}>
         <input className='text-title' value={title} name='title' onChange={handleChange} type='text' placeholder='Title' />
         <input className='text-note' value={txt} name='txt' onChange={handleChange} type='text' placeholder='Take a note...' />
+        {/* <NoteImg noteId={noteToAdd.id} /> */}
         <button className='btn-form' type='submit'>
           {isEditing ? "Save Edit" : "Add Note"}
         </button>
